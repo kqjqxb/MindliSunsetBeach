@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SettingsScreen from './SettingsScreen';
-import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowUpRightIcon, ChevronLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowUpRightIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import * as ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -71,6 +71,7 @@ const HomeScreen = () => {
   const [selectedPlacesCategory, setSelectedPlacesCategory] = useState('Places');
   const [selectedMindliPlace, setSelectedMindliPlace] = useState(null);
   const [isMindliPlaceDetailsModalVisible, setIsMindliPlaceDetailsModalVisible] = useState(false);
+  const [isMindliLocationAdded, setIsMindliLocationAdded] = useState(false);
   const scrollViewRef = useRef(null);
 
   const [newPlaceCoordinates, setNewPlaceCoordinates] = useState({
@@ -81,6 +82,13 @@ const HomeScreen = () => {
   useEffect(() => {
     console.log('newPlaceCoordinates:', newPlaceCoordinates);
   }, [newPlaceCoordinates])
+
+  const handleDeletemindliPlace = async (id) => {
+    const updatedMindliPlaces = mindliPlaces.filter(item => item.id !== id);
+    setMindliPlaces(updatedMindliPlaces);
+    await AsyncStorage.setItem('mindliPlaces', JSON.stringify(updatedMindliPlaces));
+
+  };
 
   useEffect(() => {
     if (scrollViewRef.current) {
@@ -130,7 +138,9 @@ const HomeScreen = () => {
       const updatedMindliPlaces = [newMindliPlace, ...mindliPlaces];
       await AsyncStorage.setItem('mindliPlaces', JSON.stringify(updatedMindliPlaces));
       setMindliPlaces(updatedMindliPlaces);
-      setNewMindliPlaceModalVisible(false);
+
+      // setNewMindliPlaceModalVisible(false);
+      setIsMindliLocationAdded(true);
 
       setNewMindliPlaceImage('');
       setNewMindliPlaceTitle('');
@@ -175,7 +185,7 @@ const HomeScreen = () => {
       ]
     );
   };
-  
+
   useEffect(() => {
     console.log('mindliPlaces:', mindliPlaces);
   }, [mindliPlaces])
@@ -430,8 +440,11 @@ const HomeScreen = () => {
                               alignSelf: 'flex-start',
                               marginTop: dimensions.height * 0.025,
                               fontWeight: 400,
-                              maxWidth: dimensions.width * 0.75,
-                            }}>
+                              maxWidth: dimensions.width * 0.4,
+                            }}
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                          >
                             {mindliPlace.title}
                           </Text>
                         </TouchableOpacity>
@@ -469,7 +482,7 @@ const HomeScreen = () => {
                       justifyContent: 'space-between',
                     }}>
                       <Image
-                        source={{uri: mindliStoragedPlace.image}}
+                        source={{ uri: mindliStoragedPlace.image }}
                         style={{
                           width: dimensions.width * 0.25,
                           height: dimensions.height * 0.088,
@@ -496,8 +509,11 @@ const HomeScreen = () => {
                         alignSelf: 'flex-start',
                         marginTop: dimensions.height * 0.025,
                         fontWeight: 400,
-                        maxWidth: dimensions.width * 0.75,
-                      }}>
+                        maxWidth: dimensions.width * 0.4,
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                    >
                       {mindliStoragedPlace.title}
                     </Text>
                   </TouchableOpacity>
@@ -583,215 +599,254 @@ const HomeScreen = () => {
           setNewMindliPlaceModalVisible(!newMindliPlaceModalVisible);
         }}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        {!isMindliLocationAdded ? (
+
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <SafeAreaView style={{
+              flex: 1,
+              backgroundColor: '#141414',
+              width: dimensions.width,
+              height: dimensions.height,
+            }}>
+              <View style={{
+                width: dimensions.width * 0.9,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                alignSelf: 'center',
+                marginTop: dimensions.height * 0.01,
+              }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setNewMindliPlaceModalVisible(false);
+                    setNewMindliPlaceImage('');
+                    setNewMindliPlaceTitle('');
+                    setNewMindliPlaceDescription('');
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    borderRadius: dimensions.width * 0.1,
+                    padding: dimensions.width * 0.016,
+                  }}>
+                  <ArrowLeftIcon size={dimensions.height * 0.04} color='white' />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    fontFamily: fontSFProTextRegular,
+                    color: 'white',
+                    fontSize: dimensions.width * 0.061,
+                    textAlign: 'right',
+                    alignSelf: 'center',
+                    fontWeight: 400,
+                  }}>
+                  Add your spot
+                </Text>
+              </View>
+
+              <MapView
+                style={{
+                  width: dimensions.width * 0.9,
+                  height: dimensions.height * 0.21,
+                  borderRadius: dimensions.width * 0.0777,
+                  alignSelf: 'center',
+                  marginTop: dimensions.height * 0.01,
+                  zIndex: 50,
+                }}
+                initialRegion={{
+                  latitude: newPlaceCoordinates.latitude,
+                  longitude: newPlaceCoordinates.longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+                onPress={(e) => {
+                  setNewPlaceCoordinates(e.nativeEvent.coordinate);
+                }}
+              >
+                <Marker
+                  pinColor={"#FFFCDD"}
+                  draggable
+                  coordinate={newPlaceCoordinates}
+                  onDragEnd={(e) => {
+                    setNewPlaceCoordinates(e.nativeEvent.coordinate);
+                  }}
+                />
+              </MapView>
+
+              {newMindliPlaceImage === '' || !newMindliPlaceImage ? (
+                <TouchableOpacity
+                  onPress={() => handleCoinCollectionImagePicker()}
+                  style={{
+                    borderRadius: dimensions.width * 0.088,
+                    backgroundColor: '#2C2C2C',
+                    width: dimensions.width * 0.4,
+                    height: dimensions.width * 0.4,
+                    alignSelf: 'flex-start',
+                    marginLeft: dimensions.width * 0.05,
+                    marginTop: dimensions.height * 0.014,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../assets/icons/addMindliPlaceImageIcon.png')}
+                    style={{
+                      width: dimensions.width * 0.25,
+                      height: dimensions.width * 0.25,
+                      left: dimensions.width * 0.01,
+                      bottom: dimensions.width * 0.01,
+                      alignSelf: 'center',
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleDeleteMindliPlaceImage();
+                  }}
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginTop: dimensions.height * 0.01,
+                    marginLeft: dimensions.width * 0.05,
+                  }}>
+                  <Image
+                    source={{ uri: newMindliPlaceImage }}
+                    style={{
+                      width: dimensions.width * 0.4,
+                      height: dimensions.width * 0.4,
+                      borderRadius: dimensions.width * 0.088,
+                    }}
+                    resizeMode='stretch'
+                  />
+                  <Image
+                    source={require('../assets/icons/deleteMindliPlaceImageIcon.png')}
+                    style={{
+                      width: dimensions.width * 0.25,
+                      height: dimensions.width * 0.25,
+                      alignSelf: 'center',
+                      position: 'absolute',
+                      top: '19%',
+                      marginRight: -dimensions.width * 0.03,
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
+              )}
+
+              <TextInput
+                placeholder="Title"
+                value={newMindliPlaceTitle}
+                maxLength={55}
+                onChangeText={setNewMindliPlaceTitle}
+                placeholderTextColor="rgba(210, 210, 210, 0.91)"
+                placeholderTextSize={dimensions.width * 0.03}
+                style={{
+                  backgroundColor: '#2C2C2C',
+                  fontWeight: newMindliPlaceTitle.length === 0 ? 400 : 600,
+                  alignSelf: 'center',
+                  width: dimensions.width * 0.9,
+                  padding: dimensions.width * 0.05,
+                  fontSize: dimensions.width * 0.043,
+                  color: '#fff',
+                  height: dimensions.height * 0.07,
+                  fontFamily: fontSFProTextRegular,
+                  borderRadius: dimensions.width * 0.1,
+                  marginTop: dimensions.height * 0.01,
+                }}
+              />
+
+              <TextInput
+                placeholder="Description (optional)"
+                value={newMindliPlaceDescription}
+                onChangeText={setNewMindliPlaceDescription}
+                maxLength={250}
+                placeholderTextColor="rgba(210, 210, 210, 0.91)"
+                placeholderTextSize={dimensions.width * 0.03}
+                multiline={true}
+                textAlignVertical="top"
+                style={{
+                  backgroundColor: '#2C2C2C',
+                  fontWeight: newMindliPlaceDescription.length === 0 ? 400 : 600,
+                  alignSelf: 'center',
+                  width: dimensions.width * 0.9,
+                  padding: dimensions.width * 0.05,
+                  fontSize: dimensions.width * 0.043,
+                  color: '#fff',
+                  height: dimensions.height * 0.16,
+                  fontFamily: fontSFProTextRegular,
+                  borderRadius: dimensions.width * 0.1,
+                  marginTop: dimensions.height * 0.01,
+                }}
+              />
+
+              <TouchableOpacity
+                onPress={() => saveMindliPlace()}
+                disabled={newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === ''}
+                style={{
+                  width: dimensions.width * 0.9,
+                  height: dimensions.height * 0.07,
+                  backgroundColor: newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === '' ? '#939393' : '#DEC05B',
+                  borderRadius: dimensions.width * 0.1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  position: 'absolute',
+                  bottom: dimensions.height * 0.05,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontSFProTextRegular,
+                    color: 'white',
+                    fontSize: dimensions.width * 0.055,
+                    textAlign: 'right',
+                    alignSelf: 'center',
+                    fontWeight: 400,
+                  }}>
+                  Add a place
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </TouchableWithoutFeedback>
+        ) : (
           <SafeAreaView style={{
             flex: 1,
             backgroundColor: '#141414',
             width: dimensions.width,
             height: dimensions.height,
           }}>
-            <View style={{
-              width: dimensions.width * 0.9,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              alignSelf: 'center',
-              marginTop: dimensions.height * 0.01,
-            }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setNewMindliPlaceModalVisible(false);
-                  setNewMindliPlaceImage('');
-                  setNewMindliPlaceTitle('');
-                  setNewMindliPlaceDescription('');
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                  borderRadius: dimensions.width * 0.1,
-                  padding: dimensions.width * 0.016,
-                }}>
-                <ArrowLeftIcon size={dimensions.height * 0.04} color='white' />
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.width * 0.061,
-                  textAlign: 'right',
-                  alignSelf: 'center',
-                  fontWeight: 400,
-                }}>
-                Add your spot
-              </Text>
-            </View>
-
-            <MapView
-              style={{
-                width: dimensions.width * 0.9,
-                height: dimensions.height * 0.21,
-                borderRadius: dimensions.width * 0.0777,
-                alignSelf: 'center',
-                marginTop: dimensions.height * 0.01,
-                zIndex: 50,
-              }}
-              initialRegion={{
-                latitude: newPlaceCoordinates.latitude,
-                longitude: newPlaceCoordinates.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              onPress={(e) => {
-                setNewPlaceCoordinates(e.nativeEvent.coordinate);
-              }}
-            >
-              <Marker
-                pinColor={"#FFFCDD"}
-                draggable
-                coordinate={newPlaceCoordinates}
-                onDragEnd={(e) => {
-                  setNewPlaceCoordinates(e.nativeEvent.coordinate);
-                }}
-              />
-            </MapView>
-
-            {newMindliPlaceImage === '' || !newMindliPlaceImage ? (
-              <TouchableOpacity
-                onPress={() => handleCoinCollectionImagePicker()}
-                style={{
-                  borderRadius: dimensions.width * 0.088,
-                  backgroundColor: '#2C2C2C',
-                  width: dimensions.width * 0.4,
-                  height: dimensions.width * 0.4,
-                  alignSelf: 'flex-start',
-                  marginLeft: dimensions.width * 0.05,
-                  marginTop: dimensions.height * 0.014,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  source={require('../assets/icons/addMindliPlaceImageIcon.png')}
-                  style={{
-                    width: dimensions.width * 0.25,
-                    height: dimensions.width * 0.25,
-                    left: dimensions.width * 0.01,
-                    bottom: dimensions.width * 0.01,
-                    alignSelf: 'center',
-                  }}
-                  resizeMode='contain'
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  handleDeleteMindliPlaceImage();
-                }}
-                style={{
-                  alignSelf: 'flex-start',
-                  marginTop: dimensions.height * 0.01,
-                  marginLeft: dimensions.width * 0.05,
-                }}>
-                <Image
-                  source={{ uri: newMindliPlaceImage }}
-                  style={{
-                    width: dimensions.width * 0.4,
-                    height: dimensions.width * 0.4,
-                    borderRadius: dimensions.width * 0.088,
-                  }}
-                  resizeMode='stretch'
-                />
-                <Image
-                  source={require('../assets/icons/deleteMindliPlaceImageIcon.png')}
-                  style={{
-                    width: dimensions.width * 0.25,
-                    height: dimensions.width * 0.25,
-                    alignSelf: 'center',
-                    position: 'absolute',
-                    top: '19%',
-                    marginRight: -dimensions.width * 0.03,
-                  }}
-                  resizeMode='contain'
-                />
-              </TouchableOpacity>
-            )}
-
-            <TextInput
-              placeholder="Title"
-              value={newMindliPlaceTitle}
-              onChangeText={setNewMindliPlaceTitle}
-              placeholderTextColor="rgba(210, 210, 210, 0.91)"
-              placeholderTextSize={dimensions.width * 0.03}
-              style={{
-                backgroundColor: '#2C2C2C',
-                fontWeight: newMindliPlaceTitle.length === 0 ? 400 : 600,
-                alignSelf: 'center',
-                width: dimensions.width * 0.9,
-                padding: dimensions.width * 0.05,
-                fontSize: dimensions.width * 0.043,
-                color: '#fff',
-                height: dimensions.height * 0.07,
-                fontFamily: fontSFProTextRegular,
-                borderRadius: dimensions.width * 0.1,
-                marginTop: dimensions.height * 0.01,
-              }}
-            />
-
-            <TextInput
-              placeholder="Description (optional)"
-              value={newMindliPlaceDescription}
-              onChangeText={setNewMindliPlaceDescription}
-              maxLength={250}
-              placeholderTextColor="rgba(210, 210, 210, 0.91)"
-              placeholderTextSize={dimensions.width * 0.03}
-              multiline={true}
-              textAlignVertical="top"
-              style={{
-                backgroundColor: '#2C2C2C',
-                fontWeight: newMindliPlaceDescription.length === 0 ? 400 : 600,
-                alignSelf: 'center',
-                width: dimensions.width * 0.9,
-                padding: dimensions.width * 0.05,
-                fontSize: dimensions.width * 0.043,
-                color: '#fff',
-                height: dimensions.height * 0.16,
-                fontFamily: fontSFProTextRegular,
-                borderRadius: dimensions.width * 0.1,
-                marginTop: dimensions.height * 0.01,
-              }}
-            />
-
             <TouchableOpacity
-              onPress={() => saveMindliPlace()}
-              disabled={newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === ''}
+              onPress={() => {
+                setNewMindliPlaceModalVisible(false);
+              }}
               style={{
-                width: dimensions.width * 0.9,
-                height: dimensions.height * 0.07,
-                backgroundColor: newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === '' ? '#939393' : '#DEC05B',
-                borderRadius: dimensions.width * 0.1,
+                flexDirection: 'row',
                 alignItems: 'center',
+                alignSelf: 'flex-end',
                 justifyContent: 'center',
-                alignSelf: 'center',
-                position: 'absolute',
-                bottom: dimensions.height * 0.05,
+                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                borderRadius: dimensions.width * 0.1,
+                padding: dimensions.width * 0.016,
+                marginRight: dimensions.width * 0.05,
               }}>
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.width * 0.055,
-                  textAlign: 'right',
-                  alignSelf: 'center',
-                  fontWeight: 400,
-                }}>
-                Add a place
-              </Text>
+              <XMarkIcon size={dimensions.height * 0.04} color='white' />
             </TouchableOpacity>
+
+            <Image
+              source={require('../assets/images/mindliLocationAddedImage.png')}
+              style={{
+                width: dimensions.width * 0.75,
+                height: dimensions.height * 0.34,
+                alignSelf: 'center',
+                marginTop: dimensions.height * 0.16,
+              }}
+              resizeMode='contain'
+            />
           </SafeAreaView>
-        </TouchableWithoutFeedback>
+        )}
       </Modal>
 
 
@@ -850,7 +905,7 @@ const HomeScreen = () => {
           </Text>
 
           <Image
-            source={selectedPlacesCategory === 'Places' ? selectedMindliPlace?.image : {uri: selectedMindliPlace?.image}}
+            source={selectedPlacesCategory === 'Places' ? selectedMindliPlace?.image : { uri: selectedMindliPlace?.image }}
             style={{
               width: dimensions.width * 0.9,
               height: dimensions.height * 0.21,
@@ -916,6 +971,37 @@ const HomeScreen = () => {
             }}>
             {selectedMindliPlace?.description}
           </Text>
+
+          {selectedPlacesCategory === 'My Places' && (
+            <TouchableOpacity
+              onPress={() => {
+                handleDeletemindliPlace(selectedMindliPlace.id);
+                setIsMindliPlaceDetailsModalVisible(false);
+              }}
+              style={{
+                width: dimensions.width * 0.9,
+                height: dimensions.height * 0.07,
+                backgroundColor: '#FF382B',
+                borderRadius: dimensions.width * 0.1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                position: 'absolute',
+                bottom: dimensions.height * 0.05,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fontSFProTextRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.055,
+                  textAlign: 'right',
+                  alignSelf: 'center',
+                  fontWeight: 400,
+                }}>
+                Delete Place
+              </Text>
+            </TouchableOpacity>
+          )}
         </SafeAreaView>
       </Modal>
     </View>
