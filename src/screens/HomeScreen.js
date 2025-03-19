@@ -22,7 +22,6 @@ import MapView, { Marker } from 'react-native-maps';
 import mindliPlacesData from '../components/mindliPlacesData';
 
 import TidesAndSunsetsScreen from './TidesAndSunsetsScreen';
-import CleanCoinGameScreen from './CleanCoinGameScreen';
 import MindliPlannerScreen from './MindliPlannerScreen';
 import MindliActivitiesScreen from './MindliActivitiesScreen';
 
@@ -52,7 +51,7 @@ const bottomBtns = [
     id: 4,
     mindliScreen: 'Activities',
     mindliScreenTitle: 'Activities',
-    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/quizIcon.png'),
+    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/activitiesIcon.png'),
   },
 ]
 
@@ -65,7 +64,6 @@ const HomeScreen = () => {
   const [newMindliPlaceImage, setNewMindliPlaceImage] = useState('');
   const [newMindliPlaceTitle, setNewMindliPlaceTitle] = useState('');
   const [newMindliPlaceDescription, setNewMindliPlaceDescription] = useState('');
-  const [isCoinGameStarted, setIsCoinGameStarted] = useState(false);
 
   const [mindliPlaces, setMindliPlaces] = useState([]);
   const [selectedPlacesCategory, setSelectedPlacesCategory] = useState('Places');
@@ -182,7 +180,7 @@ const HomeScreen = () => {
     }
   };
 
-  const handleCoinCollectionImagePicker = () => {
+  const handleMindliSunsetImagePicker = () => {
     ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -712,7 +710,7 @@ const HomeScreen = () => {
 
               {newMindliPlaceImage === '' || !newMindliPlaceImage ? (
                 <TouchableOpacity
-                  onPress={() => handleCoinCollectionImagePicker()}
+                  onPress={() => handleMindliSunsetImagePicker()}
                   style={{
                     borderRadius: dimensions.width * 0.088,
                     backgroundColor: '#2C2C2C',
