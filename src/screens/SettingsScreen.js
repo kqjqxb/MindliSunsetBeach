@@ -208,7 +208,7 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={{
+      <View style={{
         width: dimensions.width * 0.9,
         height: dimensions.height * 0.07,
         borderRadius: dimensions.width * 0.1,
@@ -232,13 +232,13 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
         </Text>
 
         <Switch
-          trackColor={{ false: '#948ea0', true: '#AC9958' }}
+          trackColor={{ false: '#2C2C2C', true: '#AC9958' }}
           thumbColor={'#FFF'}
           ios_backgroundColor="#3E3E3E"
           onValueChange={toggleNotificationSwitch}
           value={isNotificationEnabled}
         />
-      </TouchableOpacity>
+      </View>
 
       <TouchableOpacity
         onPress={() => {
@@ -388,10 +388,8 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
                       Choose
                     </Text>
                   </TouchableOpacity>
-
                 </View>
               ))}
-
             </View>
           </View>
         </View>
@@ -505,10 +503,8 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
                       Choose
                     </Text>
                   </TouchableOpacity>
-
                 </View>
               ))}
-
             </View>
           </View>
         </View>

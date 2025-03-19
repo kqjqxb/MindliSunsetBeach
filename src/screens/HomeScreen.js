@@ -22,7 +22,7 @@ import MapView, { Marker } from 'react-native-maps';
 import mindliPlacesData from '../components/mindliPlacesData';
 
 import CollectionDetailsScreen from './CollectionDetailsScreen';
-import EncyclopediaScreen from './EncyclopediaScreen';
+import TidesAndSunsetsScreen from './TidesAndSunsetsScreen';
 import CleanCoinGameScreen from './CleanCoinGameScreen';
 
 const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
@@ -37,7 +37,7 @@ const bottomBtns = [
   },
   {
     id: 2,
-    mindliScreen: 'Encyclopedia',
+    mindliScreen: 'Tides&Sunsets',
     mindliScreenTitle: 'Tides & sunsets',
     mindliScreenIcon: require('../assets/icons/mindliBottomIcons/tidesIcon.png'),
   },
@@ -547,12 +547,7 @@ const HomeScreen = () => {
                 ))}
               </View>
             )}
-
-
-
           </ScrollView>
-
-
 
         </SafeAreaView>
       ) : selectedMindliSunsetBeachScreen === 'Settings' ? (
@@ -561,8 +556,8 @@ const HomeScreen = () => {
         />
       ) : selectedMindliSunsetBeachScreen === 'CollectionDetails' ? (
         <CollectionDetailsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliPlace={selectedMindliPlace} setSelectedMindliPlace={setSelectedMindliPlace} mindliPlaces={mindliPlaces} setMindliPlaces={setMindliPlaces} />
-      ) : selectedMindliSunsetBeachScreen === 'Encyclopedia' ? (
-        <EncyclopediaScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} />
+      ) : selectedMindliSunsetBeachScreen === 'Tides&Sunsets' ? (
+        <TidesAndSunsetsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} setNotificationEnabled={setNotificationEnabled} isNotificationEnabled={isNotificationEnabled} />
       ) : selectedMindliSunsetBeachScreen === 'CleanCoinGame' ? (
         <CleanCoinGameScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted} />
       ) : null}
