@@ -21,9 +21,10 @@ import MapView, { Marker } from 'react-native-maps';
 
 import mindliPlacesData from '../components/mindliPlacesData';
 
-import CollectionDetailsScreen from './CollectionDetailsScreen';
 import TidesAndSunsetsScreen from './TidesAndSunsetsScreen';
 import CleanCoinGameScreen from './CleanCoinGameScreen';
+import MindliPlannerScreen from './MindliPlannerScreen';
+import MindliActivitiesScreen from './MindliActivitiesScreen';
 
 const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
 const fontSFProTextRegular = 'SFProText-Regular';
@@ -49,8 +50,8 @@ const bottomBtns = [
   },
   {
     id: 4,
-    mindliScreen: 'Settings',
-    mindliScreenTitle: 'Quiz',
+    mindliScreen: 'Activities',
+    mindliScreenTitle: 'Activities',
     mindliScreenIcon: require('../assets/icons/mindliBottomIcons/quizIcon.png'),
   },
 ]
@@ -554,15 +555,15 @@ const HomeScreen = () => {
         <SettingsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} setNotificationEnabled={setNotificationEnabled} isNotificationEnabled={isNotificationEnabled} 
         temperatureValue={temperatureValue} setTemperatureValue={setTemperatureValue} windSpeedValue={windSpeedValue} setWindSpeedValue={setWindSpeedValue}
         />
-      ) : selectedMindliSunsetBeachScreen === 'CollectionDetails' ? (
-        <CollectionDetailsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliPlace={selectedMindliPlace} setSelectedMindliPlace={setSelectedMindliPlace} mindliPlaces={mindliPlaces} setMindliPlaces={setMindliPlaces} />
+      ) : selectedMindliSunsetBeachScreen === 'Planner' ? (
+        <MindliPlannerScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen}/>
       ) : selectedMindliSunsetBeachScreen === 'Tides&Sunsets' ? (
         <TidesAndSunsetsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} setNotificationEnabled={setNotificationEnabled} isNotificationEnabled={isNotificationEnabled} />
-      ) : selectedMindliSunsetBeachScreen === 'CleanCoinGame' ? (
-        <CleanCoinGameScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted} />
+      ) : selectedMindliSunsetBeachScreen === 'Activities' ? (
+        <MindliActivitiesScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen}/>
       ) : null}
 
-      {selectedMindliSunsetBeachScreen !== 'Settings' && !(selectedMindliSunsetBeachScreen === 'CleanCoinGame' && isCoinGameStarted) && (
+      {selectedMindliSunsetBeachScreen !== 'Settings' && (
         <View
           style={{
             position: 'absolute',
@@ -578,6 +579,14 @@ const HomeScreen = () => {
             paddingHorizontal: dimensions.width * 0.05,
             zIndex: 4000,
             height: dimensions.height * 0.1,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.4,
+            shadowRadius: dimensions.width * 0.05,
+            elevation: 5,
           }}
         >
           {bottomBtns.map((button, index) => (
