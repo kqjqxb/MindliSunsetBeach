@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -15,38 +15,44 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SettingsScreen from './SettingsScreen';
-import { ChevronLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowUpRightIcon, ChevronLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 import * as ImagePicker from 'react-native-image-picker';
+import MapView, { Marker } from 'react-native-maps';
+
+import mindliPlacesData from '../components/mindliPlacesData';
+import coastalBitesData from '../components/coastalBitesData';
+
 import CollectionDetailsScreen from './CollectionDetailsScreen';
 import EncyclopediaScreen from './EncyclopediaScreen';
 import CleanCoinGameScreen from './CleanCoinGameScreen';
 
 const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
+const fontSFProTextRegular = 'SFProText-Regular';
 
 const bottomBtns = [
   {
     id: 1,
     mindliScreen: 'Home',
-    mindliScreenTitle: 'My collection',
-    mindliScreenIcon: require('../assets/icons/whiteCoinCollBtnIcons/collectionIcon.png'),
+    mindliScreenTitle: 'Place',
+    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/homeIcon.png'),
   },
   {
     id: 2,
     mindliScreen: 'Encyclopedia',
-    mindliScreenTitle: 'Encyclopedia',
-    mindliScreenIcon: require('../assets/icons/whiteCoinCollBtnIcons/encyclopediaIcon.png'),
+    mindliScreenTitle: 'Tides & sunsets',
+    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/tidesIcon.png'),
   },
   {
     id: 3,
-    mindliScreen: 'CleanCoinGame',
-    mindliScreenTitle: 'Game',
-    mindliScreenIcon: require('../assets/icons/whiteCoinCollBtnIcons/gameIcon.png'),
+    mindliScreen: 'Planner',
+    mindliScreenTitle: 'Planner',
+    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/plannerIcon.png'),
   },
   {
     id: 4,
     mindliScreen: 'Settings',
-    mindliScreenTitle: 'Settings',
-    mindliScreenIcon: require('../assets/icons/whiteCoinCollBtnIcons/settingsIcon.png'),
+    mindliScreenTitle: 'Quiz',
+    mindliScreenIcon: require('../assets/icons/mindliBottomIcons/quizIcon.png'),
   },
 ]
 
@@ -54,21 +60,54 @@ const HomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedCoinCollectorScreen, setSelectedCoinCollectorScreen] = useState('Home');
 
-  const [coinCollection, setCoinCollection] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [collectionImage, setCollectionImage] = useState('');
-  const [selectedCollection, setSelectedCollection] = useState(null);
-  const [collectionTitle, setCollectionTitle] = useState('');
-  const [collectionDescription, setCollectionDescription] = useState('');
+  const [newMindliPlaceModalVisible, setNewMindliPlaceModalVisible] = useState(false);
+
+  const [newMindliPlaceImage, setNewMindliPlaceImage] = useState('');
+  const [newMindliPlaceTitle, setNewMindliPlaceTitle] = useState('');
+  const [newMindliPlaceDescription, setNewMindliPlaceDescription] = useState('');
   const [isCoinGameStarted, setIsCoinGameStarted] = useState(false);
+
+  const [mindliPlaces, setMindliPlaces] = useState([]);
+  const [selectedPlacesCategory, setSelectedPlacesCategory] = useState('Places');
+  const [selectedMindliPlace, setSelectedMindliPlace] = useState(null);
+  const [isMindliPlaceDetailsModalVisible, setIsMindliPlaceDetailsModalVisible] = useState(false);
+  const scrollViewRef = useRef(null);
+
+  const [newPlaceCoordinates, setNewPlaceCoordinates] = useState({
+    latitude: -12.448279861436154,
+    longitude: 130.82960082352463,
+  });
+
+  useEffect(() => {
+    console.log('newPlaceCoordinates:', newPlaceCoordinates);
+  }, [newPlaceCoordinates])
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  }, [selectedPlacesCategory]);
+
+  const getMindliDataByCategory = (categoriMindli) => {
+    switch (categoriMindli) {
+      case 'Places':
+        return mindliPlacesData;
+      case 'My Places':
+        return mindliPlaces;
+      default:
+        return [];
+    }
+  };
+
+  const mindliData = getMindliDataByCategory(selectedPlacesCategory);
 
   const loadCoinCollection = async () => {
     try {
-      const storedCollection = await AsyncStorage.getItem('coinCollection');
-      const parsedCollection = storedCollection ? JSON.parse(storedCollection) : [];
-      setCoinCollection(parsedCollection);
+      const storedMindliPlaces = await AsyncStorage.getItem('mindliPlaces');
+      const parsedMindliPlaces = storedMindliPlaces ? JSON.parse(storedMindliPlaces) : [];
+      setMindliPlaces(parsedMindliPlaces);
     } catch (error) {
-      console.error('Error loading coinCollection:', error);
+      console.error('Error loading mindliPlaces:', error);
     }
   };
 
@@ -76,29 +115,30 @@ const HomeScreen = () => {
     loadCoinCollection();
   }, []);
 
-  const saveCollection = async () => {
-    const collections = JSON.parse(await AsyncStorage.getItem('coinCollection')) || [];
-    const newCollectionId = collections.length > 0 ? Math.max(...collections.map(e => e.id)) + 1 : 1;
-    const newCollection = {
-      id: newCollectionId, 
-      image: collectionImage,
-      title: collectionTitle,
-      description: collectionDescription !== '' ? collectionDescription : 'No description',
-      coins: [],
+  const saveMindliPlace = async () => {
+    const minPlace = JSON.parse(await AsyncStorage.getItem('mindliPlaces')) || [];
+    const newMindliPlaceId = minPlace.length > 0 ? Math.max(...minPlace.map(e => e.id)) + 1 : 1;
+    const newMindliPlace = {
+      id: newMindliPlaceId,
+      image: newMindliPlaceImage,
+      title: newMindliPlaceTitle,
+      description: newMindliPlaceDescription !== '' ? newMindliPlaceDescription : 'No description',
+      coordinates: newPlaceCoordinates,
     };
 
     try {
-      const updatedCollections = [newCollection, ...coinCollection];
-      await AsyncStorage.setItem('coinCollection', JSON.stringify(updatedCollections));
-      setCoinCollection(updatedCollections);
-      setModalVisible(false);
+      const updatedMindliPlaces = [newMindliPlace, ...mindliPlaces];
+      await AsyncStorage.setItem('mindliPlaces', JSON.stringify(updatedMindliPlaces));
+      setMindliPlaces(updatedMindliPlaces);
+      setNewMindliPlaceModalVisible(false);
 
-      setSelectedCollection(newCollection);
-      setSelectedCoinCollectorScreen('CollectionDetails');
-
-      setCollectionImage('');
-      setCollectionTitle('');
-      setCollectionDescription('');
+      setNewMindliPlaceImage('');
+      setNewMindliPlaceTitle('');
+      setNewMindliPlaceDescription('');
+      setNewPlaceCoordinates({
+        latitude: -12.448279861436154,
+        longitude: 130.82960082352463,
+      });
     } catch (err) {
       console.error("Error saving collection:", err);
     }
@@ -111,15 +151,15 @@ const HomeScreen = () => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setCollectionImage(response.assets[0].uri);
+        setNewMindliPlaceImage(response.assets[0].uri);
       }
     });
   };
 
-  const handleDeleteCollectionImage = () => {
+  const handleDeleteMindliPlaceImage = () => {
     Alert.alert(
-      "Delete collection image",
-      "Are you sure you want to delete image of collection?",
+      "Delete place image",
+      "Are you sure you want to delete image of place?",
       [
         {
           text: "Cancel",
@@ -128,13 +168,17 @@ const HomeScreen = () => {
         {
           text: "Delete",
           onPress: () => {
-            setCollectionImage('');
+            setNewMindliPlaceImage('');
           },
           style: "destructive"
         }
       ]
     );
   };
+  
+  useEffect(() => {
+    console.log('mindliPlaces:', mindliPlaces);
+  }, [mindliPlaces])
 
   return (
     <View style={{
@@ -149,200 +193,333 @@ const HomeScreen = () => {
           paddingHorizontal: dimensions.width * 0.05,
           width: dimensions.width,
         }}>
-          <Text
-            style={{
-              fontFamily: fontSFProDisplayRegular,
-              color: 'white',
-              fontSize: dimensions.width * 0.088,
-              marginBottom: dimensions.height * 0.023,
-              textAlign: 'left',
-              alignSelf: 'flex-start',
-              fontWeight: 700,
-              paddingHorizontal: dimensions.width * 0.05,
-            }}>
-            My collection
-          </Text>
-          {coinCollection.length === 0 ? (
-            <View style={{
-              width: dimensions.width * 0.9,
-              backgroundColor: '#2CA1F6',
-              borderRadius: dimensions.width * 0.04,
-              paddingHorizontal: dimensions.width * 0.05,
-              paddingVertical: dimensions.height * 0.01,
-              alignSelf: 'center',
-              paddingBottom: dimensions.height * 0.03,
-            }}>
+          <View style={{
+            width: dimensions.width * 0.9,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            alignSelf: 'center',
+            marginBottom: dimensions.height * 0.01,
+          }}>
+            <Text
+              style={{
+                fontFamily: fontSFProTextRegular,
+                color: 'white',
+                fontSize: dimensions.width * 0.07,
+                textAlign: 'left',
+                alignSelf: 'flex-start',
+                fontWeight: 400,
+                maxWidth: dimensions.width * 0.75,
+              }}>
+              Favorite spots on the beach
+            </Text>
+            <TouchableOpacity
+              onPress={() => setSelectedCoinCollectorScreen('Settings')}
+              style={{
+                alignSelf: 'flex-start',
+              }}>
               <Image
-                source={require('../assets/images/emptyCollectionImage.png')}
+                source={require('../assets/icons/goldMindliSettingsIcon.png')}
                 style={{
-                  width: dimensions.width * 0.44,
-                  height: dimensions.width * 0.44,
-                  alignSelf: 'center',
+                  width: dimensions.width * 0.07,
+                  height: dimensions.width * 0.07,
                 }}
                 resizeMode='contain'
               />
+            </TouchableOpacity>
+          </View>
 
-              <Text
-                style={{
-                  fontFamily: fontSFProDisplayRegular,
-                  color: 'white',
-                  fontSize: dimensions.width * 0.05,
-                  textAlign: 'center',
-                  alignSelf: 'center',
-                  fontWeight: 500,
-                  paddingHorizontal: dimensions.width * 0.05,
-                }}>
-                You don't have any collection yet
-              </Text>
-
-              <Text
-                style={{
-                  fontFamily: fontSFProDisplayRegular,
-                  color: 'white',
-                  fontSize: dimensions.width * 0.034,
-                  textAlign: 'center',
-                  alignSelf: 'center',
-                  fontWeight: 300,
-                  paddingHorizontal: dimensions.width * 0.021,
-                  marginTop: dimensions.height * 0.01,
-                }}>
-                Click on the button below to add the collection
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-                style={{
-                  width: dimensions.width * 0.77,
-                  alignSelf: 'center',
-                  backgroundColor: '#FFEA1F',
-                  borderRadius: dimensions.width * 0.016,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: dimensions.height * 0.05,
-                  marginTop: dimensions.height * 0.023,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fontSFProDisplayRegular,
-                    color: 'black',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    fontWeight: 700,
-                  }}>
-                  Create a collection
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{
-              width: dimensions.width,
-              alignSelf: 'center',
-              height: dimensions.height,
-            }}>
-              <ScrollView style={{
-                width: dimensions.width,
+          <ScrollView style={{
+            width: dimensions.width * 0.9,
+            alignSelf: 'center',
+          }} contentContainerStyle={{
+            paddingBottom: dimensions.height * 0.142
+          }} ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+            <MapView
+              style={{
+                width: dimensions.width * 0.9,
+                height: dimensions.height * 0.21,
+                borderRadius: dimensions.width * 0.07,
                 alignSelf: 'center',
                 marginTop: dimensions.height * 0.01,
-              }} contentContainerStyle={{
-                paddingBottom: dimensions.height * 0.16
+                zIndex: 50
+              }}
+              region={{
+                latitude: selectedPlacesCategory === 'Places' ? mindliData[0]?.places[0]?.coordinates.latitude : selectedPlacesCategory === 'My Places' && mindliData.length > 0 ? mindliData[0].coordinates.latitude : -12.447716036965376,
+                longitude: selectedPlacesCategory === 'Places' ? mindliData[0]?.places[0]?.coordinates.longitude : selectedPlacesCategory === 'My Places' && mindliData.length > 0 ? mindliData[0].coordinates.longitude : 130.82903921380762,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+            >
+              {selectedPlacesCategory === 'Places' ? (
+                mindliData.length !== 0 && (
+                  mindliPlacesData
+                    .flatMap(category => category.places)
+                    .map((place, index) => (
+                      <Marker
+                        key={place.id || index}
+                        coordinate={place.coordinates}
+                        title={place.title}
+                        description={place.description}
+                        pinColor={"#FFFCDD"}
+                      />
+                    ))
+                )
+              ) : (
+                mindliData.length !== 0 && (
+                  mindliPlaces.map((place, index) => (
+                    <Marker
+                      key={place.id || index}
+                      coordinate={place.coordinates}
+                      title={place.title}
+                      description={place.description}
+                      pinColor={"#FFFCDD"}
+                    />
+                  ))
+                )
+              )}
+            </MapView>
+
+            <ScrollView style={{
+              alignSelf: 'flex-start',
+              marginTop: dimensions.height * 0.016,
+            }} horizontal={true} contentContainerStyle={{
+              paddingBottom: dimensions.height * 0.01
+            }} showsHorizontalScrollIndicator={false}>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                width: dimensions.width * 0.9,
               }}>
-                {coinCollection.map((collection, index) => (
-                  <TouchableOpacity key={collection.id} 
-                    onPress={() => {
-                      setSelectedCollection(collection);
-                      setSelectedCoinCollectorScreen('CollectionDetails');
-                    }}
-                  style={{
-                    width: dimensions.width * 0.9,
-                    backgroundColor: '#2CA1F6',
-                    borderRadius: dimensions.width * 0.014,
-                    paddingVertical: dimensions.height * 0.014,
-                    paddingHorizontal: dimensions.width * 0.03,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    alignSelf: 'center',
-                    marginBottom: dimensions.height * 0.019,
-                  }}>
-                    <View style={{
-                      flexDirection: 'row',
+                {['Places', 'My Places'].map((placeCategory, index) => (
+                  <TouchableOpacity
+                    onPress={() => setSelectedPlacesCategory(placeCategory)}
+                    key={index} style={{
+                      width: dimensions.width * 0.28,
+                      height: dimensions.height * 0.05,
+                      backgroundColor: '#2C2C2C',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      borderRadius: dimensions.width * 0.05,
+                      marginRight: dimensions.width * 0.025,
+                      opacity: selectedPlacesCategory === placeCategory ? 1 : 0.5,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: fontSFProTextRegular,
+                        color: 'white',
+                        fontSize: dimensions.width * 0.04,
+                        textAlign: 'center',
+                        alignSelf: 'center',
+                        fontWeight: 400,
+                        maxWidth: dimensions.width * 0.75,
+                      }}>
+                      {placeCategory}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+
+            {selectedPlacesCategory === 'My Places' && (
+              <TouchableOpacity
+                onPress={() => setNewMindliPlaceModalVisible(true)}
+              >
+                <Text
+                  style={{
+                    fontFamily: fontSFProTextRegular,
+                    color: 'white',
+                    fontSize: dimensions.width * 0.037,
+                    textAlign: 'left',
+                    alignSelf: 'flex-start',
+                    fontWeight: 400,
+                    marginVertical: dimensions.height * 0.01,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Add new place
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {mindliData.length === 0 ? (
+              <Text
+                style={{
+                  fontFamily: fontSFProTextRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.061,
+                  textAlign: 'center',
+                  alignSelf: 'center',
+                  fontWeight: 400,
+                  maxWidth: dimensions.width * 0.8,
+                  marginTop: dimensions.height * 0.1,
+                }}>
+                There's nothing here yet..
+              </Text>
+            ) : mindliData.length !== 0 && selectedPlacesCategory === 'Places' ? (
+              <>
+                {mindliData.map((mindliCateg, index) => (
+                  <View key={mindliCateg.id} style={{
+                    width: dimensions.width * 0.9, alignSelf: 'center',
+                  }}>
+                    <Text
+                      style={{
+                        fontFamily: fontSFProTextRegular,
+                        color: 'white',
+                        fontSize: dimensions.width * 0.04,
+                        textAlign: 'left',
+                        alignSelf: 'flex-start',
+                        fontWeight: 400,
+                        marginTop: mindliCateg.id !== 1 ? dimensions.height * 0.025 : 0,
+                      }}>
+                      {mindliCateg.categotyTitle}
+                    </Text>
+
+                    <View style={{
+                      width: dimensions.width * 0.9,
+                      alignSelf: 'center',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                    }}>
+                      {mindliCateg.places.map((mindliPlace, index) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setSelectedMindliPlace(mindliPlace);
+                            setIsMindliPlaceDetailsModalVisible(true);
+                          }}
+                          key={mindliPlace.id} style={{
+                            width: dimensions.width * 0.44,
+                            backgroundColor: '#2C2C2C',
+                            borderRadius: dimensions.width * 0.04,
+                            paddingHorizontal: dimensions.width * 0.023,
+                            paddingVertical: dimensions.height * 0.014,
+                            marginTop: dimensions.height * 0.014,
+                          }}>
+                          <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'flex-start',
+                            justifyContent: 'space-between',
+                          }}>
+                            <Image
+                              source={mindliPlace.image}
+                              style={{
+                                width: dimensions.width * 0.25,
+                                height: dimensions.height * 0.088,
+                                borderRadius: dimensions.width * 0.03,
+                              }}
+                              resizeMode='stretch'
+                            />
+                            <Image
+                              source={require('../assets/icons/arrowUpRightIcon.png')}
+                              style={{
+                                width: dimensions.width * 0.055,
+                                height: dimensions.width * 0.055,
+                              }}
+                              resizeMode='contain'
+                            />
+                          </View>
+
+                          <Text
+                            style={{
+                              fontFamily: fontSFProTextRegular,
+                              color: 'white',
+                              fontSize: dimensions.width * 0.035,
+                              textAlign: 'left',
+                              alignSelf: 'flex-start',
+                              marginTop: dimensions.height * 0.025,
+                              fontWeight: 400,
+                              maxWidth: dimensions.width * 0.75,
+                            }}>
+                            {mindliPlace.title}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <View style={{
+                width: dimensions.width * 0.9,
+                alignSelf: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+              }}>
+                {mindliPlaces.map((mindliStoragedPlace) => (
+                  <TouchableOpacity key={mindliStoragedPlace.id}
+                    onPress={() => {
+                      setSelectedMindliPlace(mindliStoragedPlace);
+                      setIsMindliPlaceDetailsModalVisible(true);
+                    }}
+                    style={{
+                      width: dimensions.width * 0.44,
+                      backgroundColor: '#2C2C2C',
+                      borderRadius: dimensions.width * 0.04,
+                      paddingHorizontal: dimensions.width * 0.023,
+                      paddingVertical: dimensions.height * 0.014,
+                      marginTop: dimensions.height * 0.014,
+                    }}>
+                    <View style={{
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
                     }}>
                       <Image
-                        source={{ uri: collection.image }}
+                        source={{uri: mindliStoragedPlace.image}}
                         style={{
-                          width: dimensions.width * 0.16,
-                          height: dimensions.width * 0.16,
-                          borderRadius: dimensions.width * 0.5,
+                          width: dimensions.width * 0.25,
+                          height: dimensions.height * 0.088,
+                          borderRadius: dimensions.width * 0.03,
                         }}
                         resizeMode='stretch'
                       />
-                      <Text
+                      <Image
+                        source={require('../assets/icons/arrowUpRightIcon.png')}
                         style={{
-                          fontFamily: fontSFProDisplayRegular,
-                          color: 'white',
-                          fontSize: dimensions.width * 0.04,
-                          textAlign: 'left',
-                          alignSelf: 'center',
-                          fontWeight: 700,
-                          maxWidth: dimensions.width * 0.55,
-                          marginLeft: dimensions.width * 0.025,
+                          width: dimensions.width * 0.055,
+                          height: dimensions.width * 0.055,
                         }}
-                        ellipsizeMode='tail'
-                        numberOfLines={1}
-                      >
-                        {collection.title}
-                      </Text>
+                        resizeMode='contain'
+                      />
                     </View>
-                    <ChevronRightIcon size={dimensions.height * 0.025} color='white' />
+
+                    <Text
+                      style={{
+                        fontFamily: fontSFProTextRegular,
+                        color: 'white',
+                        fontSize: dimensions.width * 0.035,
+                        textAlign: 'left',
+                        alignSelf: 'flex-start',
+                        marginTop: dimensions.height * 0.025,
+                        fontWeight: 400,
+                        maxWidth: dimensions.width * 0.75,
+                      }}>
+                      {mindliStoragedPlace.title}
+                    </Text>
                   </TouchableOpacity>
                 ))}
-              </ScrollView>
+              </View>
+            )}
 
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-                style={{
-                  width: dimensions.width * 0.9,
-                  alignSelf: 'center',
-                  backgroundColor: '#FFEA1F',
-                  borderRadius: dimensions.width * 0.016,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: dimensions.height * 0.05,
-                  marginTop: dimensions.height * 0.023,
-                  position: 'absolute',
-                  bottom: dimensions.height * 0.25,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fontSFProDisplayRegular,
-                    color: 'black',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    fontWeight: 700,
-                  }}>
-                  Create a collection
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+
+
+          </ScrollView>
+
+
 
         </SafeAreaView>
       ) : selectedCoinCollectorScreen === 'Settings' ? (
         <SettingsScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedCoinCollectorScreen={selectedCoinCollectorScreen} />
       ) : selectedCoinCollectorScreen === 'CollectionDetails' ? (
-        <CollectionDetailsScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedCollection={selectedCollection} setSelectedCollection={setSelectedCollection} coinCollection={coinCollection} setCoinCollection={setCoinCollection}/>
+        <CollectionDetailsScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedMindliPlace={selectedMindliPlace} setSelectedMindliPlace={setSelectedMindliPlace} mindliPlaces={mindliPlaces} setMindliPlaces={setMindliPlaces} />
       ) : selectedCoinCollectorScreen === 'Encyclopedia' ? (
         <EncyclopediaScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedCoinCollectorScreen={selectedCoinCollectorScreen} />
       ) : selectedCoinCollectorScreen === 'CleanCoinGame' ? (
-        <CleanCoinGameScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted}/>
+        <CleanCoinGameScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted} />
       ) : null}
 
       {selectedCoinCollectorScreen !== 'CollectionDetails' && !(selectedCoinCollectorScreen === 'CleanCoinGame' && isCoinGameStarted) && (
@@ -401,15 +578,15 @@ const HomeScreen = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={newMindliPlaceModalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setNewMindliPlaceModalVisible(!newMindliPlaceModalVisible);
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <SafeAreaView style={{
             flex: 1,
-            backgroundColor: '#0068B7',
+            backgroundColor: '#141414',
             width: dimensions.width,
             height: dimensions.height,
           }}>
@@ -423,88 +600,87 @@ const HomeScreen = () => {
             }}>
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(false);
-                  setCollectionImage('');
-                  setCollectionTitle('');
-                  setCollectionDescription('');
+                  setNewMindliPlaceModalVisible(false);
+                  setNewMindliPlaceImage('');
+                  setNewMindliPlaceTitle('');
+                  setNewMindliPlaceDescription('');
                 }}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   alignSelf: 'flex-start',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                  borderRadius: dimensions.width * 0.1,
+                  padding: dimensions.width * 0.016,
                 }}>
-                <ChevronLeftIcon size={dimensions.height * 0.034} color='white' />
-                <Text
-                  style={{
-                    fontFamily: fontSFProDisplayRegular,
-                    color: 'white',
-                    fontSize: dimensions.width * 0.05,
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    fontWeight: 400,
-                    paddingHorizontal: dimensions.width * 0.03,
-                  }}>
-                  Back
-                </Text>
+                <ArrowLeftIcon size={dimensions.height * 0.04} color='white' />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                disabled={collectionImage === '' || !collectionImage || collectionTitle === ''}
-                onPress={saveCollection}
+              <Text
                 style={{
-                  opacity: collectionImage === '' || !collectionImage || collectionTitle === '' ? 0.5 : 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  fontFamily: fontSFProTextRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.061,
+                  textAlign: 'right',
+                  alignSelf: 'center',
+                  fontWeight: 400,
                 }}>
-                <Text
-                  style={{
-                    fontFamily: fontSFProDisplayRegular,
-                    color: 'white',
-                    fontSize: dimensions.width * 0.05,
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    fontWeight: 400,
-                    paddingHorizontal: dimensions.width * 0.03,
-                  }}>
-                  Save
-                </Text>
-              </TouchableOpacity>
+                Add your spot
+              </Text>
             </View>
 
-            <Text
+            <MapView
               style={{
-                fontFamily: fontSFProDisplayRegular,
-                color: 'white',
-                fontSize: dimensions.width * 0.088,
-                textAlign: 'left',
-                alignSelf: 'flex-start',
-                fontWeight: 700,
-                paddingHorizontal: dimensions.width * 0.05,
-                marginTop: dimensions.height * 0.016,
-              }}>
-              Create collection
-            </Text>
+                width: dimensions.width * 0.9,
+                height: dimensions.height * 0.21,
+                borderRadius: dimensions.width * 0.0777,
+                alignSelf: 'center',
+                marginTop: dimensions.height * 0.01,
+                zIndex: 50,
+              }}
+              initialRegion={{
+                latitude: newPlaceCoordinates.latitude,
+                longitude: newPlaceCoordinates.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+              onPress={(e) => {
+                setNewPlaceCoordinates(e.nativeEvent.coordinate);
+              }}
+            >
+              <Marker
+                pinColor={"#FFFCDD"}
+                draggable
+                coordinate={newPlaceCoordinates}
+                onDragEnd={(e) => {
+                  setNewPlaceCoordinates(e.nativeEvent.coordinate);
+                }}
+              />
+            </MapView>
 
-            {collectionImage === '' || !collectionImage ? (
+            {newMindliPlaceImage === '' || !newMindliPlaceImage ? (
               <TouchableOpacity
                 onPress={() => handleCoinCollectionImagePicker()}
                 style={{
-                  borderRadius: dimensions.width * 0.04,
-                  backgroundColor: '#2CA1F6',
-                  width: dimensions.width * 0.9,
-                  height: dimensions.height * 0.23,
-                  alignSelf: 'center',
-                  marginTop: dimensions.height * 0.01,
+                  borderRadius: dimensions.width * 0.088,
+                  backgroundColor: '#2C2C2C',
+                  width: dimensions.width * 0.4,
+                  height: dimensions.width * 0.4,
+                  alignSelf: 'flex-start',
+                  marginLeft: dimensions.width * 0.05,
+                  marginTop: dimensions.height * 0.014,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
                 <Image
-                  source={require('../assets/images/addImageImage.png')}
+                  source={require('../assets/icons/addMindliPlaceImageIcon.png')}
                   style={{
-                    width: dimensions.width * 0.16,
-                    height: dimensions.width * 0.16,
+                    width: dimensions.width * 0.25,
+                    height: dimensions.width * 0.25,
+                    left: dimensions.width * 0.01,
+                    bottom: dimensions.width * 0.01,
                     alignSelf: 'center',
-                    position: 'absolute',
-                    top: '34%',
                   }}
                   resizeMode='contain'
                 />
@@ -512,30 +688,31 @@ const HomeScreen = () => {
             ) : (
               <TouchableOpacity
                 onPress={() => {
-                  handleDeleteCollectionImage();
+                  handleDeleteMindliPlaceImage();
                 }}
                 style={{
-                  alignSelf: 'center',
+                  alignSelf: 'flex-start',
                   marginTop: dimensions.height * 0.01,
+                  marginLeft: dimensions.width * 0.05,
                 }}>
                 <Image
-                  source={{ uri: collectionImage }}
+                  source={{ uri: newMindliPlaceImage }}
                   style={{
-                    width: dimensions.width * 0.9,
-                    height: dimensions.height * 0.23,
-                    borderRadius: dimensions.width * 0.025,
-                    alignSelf: 'center',
+                    width: dimensions.width * 0.4,
+                    height: dimensions.width * 0.4,
+                    borderRadius: dimensions.width * 0.088,
                   }}
                   resizeMode='stretch'
                 />
                 <Image
-                  source={require('../assets/images/deleteImage.png')}
+                  source={require('../assets/icons/deleteMindliPlaceImageIcon.png')}
                   style={{
-                    width: dimensions.width * 0.16,
-                    height: dimensions.width * 0.16,
+                    width: dimensions.width * 0.25,
+                    height: dimensions.width * 0.25,
                     alignSelf: 'center',
                     position: 'absolute',
-                    top: '34%',
+                    top: '19%',
+                    marginRight: -dimensions.width * 0.03,
                   }}
                   resizeMode='contain'
                 />
@@ -543,50 +720,203 @@ const HomeScreen = () => {
             )}
 
             <TextInput
-              placeholder="Name of the collection"
-              value={collectionTitle}
-              onChangeText={setCollectionTitle}
+              placeholder="Title"
+              value={newMindliPlaceTitle}
+              onChangeText={setNewMindliPlaceTitle}
               placeholderTextColor="rgba(210, 210, 210, 0.91)"
               placeholderTextSize={dimensions.width * 0.03}
               style={{
-                backgroundColor: '#2CA1F6',
-                fontWeight: 600,
-                width: dimensions.width * 0.9,
-                padding: dimensions.width * 0.03,
-                fontFamily: fontSFProDisplayRegular,
-                fontSize: dimensions.width * 0.043,
-                color: 'white',
-                height: dimensions.height * 0.07,
+                backgroundColor: '#2C2C2C',
+                fontWeight: newMindliPlaceTitle.length === 0 ? 400 : 600,
                 alignSelf: 'center',
-                borderRadius: dimensions.width * 0.025,
-                marginTop: dimensions.height * 0.025,
+                width: dimensions.width * 0.9,
+                padding: dimensions.width * 0.05,
+                fontSize: dimensions.width * 0.043,
+                color: '#fff',
+                height: dimensions.height * 0.07,
+                fontFamily: fontSFProTextRegular,
+                borderRadius: dimensions.width * 0.1,
+                marginTop: dimensions.height * 0.01,
               }}
             />
 
             <TextInput
-              placeholder="Description of the collection (optional)"
-              value={collectionDescription}
-              onChangeText={setCollectionDescription}
+              placeholder="Description (optional)"
+              value={newMindliPlaceDescription}
+              onChangeText={setNewMindliPlaceDescription}
+              maxLength={250}
               placeholderTextColor="rgba(210, 210, 210, 0.91)"
               placeholderTextSize={dimensions.width * 0.03}
               multiline={true}
               textAlignVertical="top"
               style={{
-                backgroundColor: '#2CA1F6',
-                padding: dimensions.width * 0.03,
-                fontFamily: fontSFProDisplayRegular,
-                fontSize: dimensions.width * 0.043,
-                fontWeight: 600,
-                color: 'white',
-                height: dimensions.height * 0.14,
+                backgroundColor: '#2C2C2C',
+                fontWeight: newMindliPlaceDescription.length === 0 ? 400 : 600,
                 alignSelf: 'center',
                 width: dimensions.width * 0.9,
-                borderRadius: dimensions.width * 0.025,
-                marginTop: dimensions.height * 0.012,
+                padding: dimensions.width * 0.05,
+                fontSize: dimensions.width * 0.043,
+                color: '#fff',
+                height: dimensions.height * 0.16,
+                fontFamily: fontSFProTextRegular,
+                borderRadius: dimensions.width * 0.1,
+                marginTop: dimensions.height * 0.01,
               }}
             />
+
+            <TouchableOpacity
+              onPress={() => saveMindliPlace()}
+              disabled={newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === ''}
+              style={{
+                width: dimensions.width * 0.9,
+                height: dimensions.height * 0.07,
+                backgroundColor: newMindliPlaceTitle.replace(/\s/g, '').length === 0 || !newMindliPlaceImage || newMindliPlaceImage === '' ? '#939393' : '#DEC05B',
+                borderRadius: dimensions.width * 0.1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                position: 'absolute',
+                bottom: dimensions.height * 0.05,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fontSFProTextRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.055,
+                  textAlign: 'right',
+                  alignSelf: 'center',
+                  fontWeight: 400,
+                }}>
+                Add a place
+              </Text>
+            </TouchableOpacity>
           </SafeAreaView>
         </TouchableWithoutFeedback>
+      </Modal>
+
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isMindliPlaceDetailsModalVisible}
+        onRequestClose={() => {
+          setIsMindliPlaceDetailsModalVisible(!isMindliPlaceDetailsModalVisible);
+        }}
+      >
+        <SafeAreaView style={{
+          flex: 1,
+          backgroundColor: '#141414',
+          width: dimensions.width,
+          height: dimensions.height,
+        }}>
+          <View style={{
+            width: dimensions.width * 0.9,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            alignSelf: 'center',
+            marginTop: dimensions.height * 0.01,
+          }}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsMindliPlaceDetailsModalVisible(false);
+                setSelectedMindliPlace(null);
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-start',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                borderRadius: dimensions.width * 0.1,
+                padding: dimensions.width * 0.016,
+              }}>
+              <ArrowLeftIcon size={dimensions.height * 0.04} color='white' />
+            </TouchableOpacity>
+          </View>
+
+          <Text
+            style={{
+              fontFamily: fontSFProTextRegular,
+              color: 'white',
+              fontSize: dimensions.width * 0.07,
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              fontWeight: 400,
+              paddingHorizontal: dimensions.width * 0.05,
+              marginTop: dimensions.height * 0.016,
+            }}>
+            {selectedMindliPlace?.title}
+          </Text>
+
+          <Image
+            source={selectedPlacesCategory === 'Places' ? selectedMindliPlace?.image : {uri: selectedMindliPlace?.image}}
+            style={{
+              width: dimensions.width * 0.9,
+              height: dimensions.height * 0.21,
+              borderRadius: dimensions.width * 0.04,
+              alignSelf: 'center',
+              marginTop: dimensions.height * 0.02,
+            }}
+            resizeMode='stretch'
+          />
+
+          <Text
+            style={{
+              fontFamily: fontSFProTextRegular,
+              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: dimensions.width * 0.037,
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              fontWeight: 400,
+              paddingHorizontal: dimensions.width * 0.05,
+              marginTop: dimensions.height * 0.025,
+            }}>
+            Coordinates
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: fontSFProTextRegular,
+              color: 'white',
+              fontSize: dimensions.width * 0.04,
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              fontWeight: 400,
+              paddingHorizontal: dimensions.width * 0.05,
+              marginTop: dimensions.height * 0.01,
+            }}>
+            {selectedMindliPlace?.coordinates.latitude.toFixed(4)}° N, {selectedMindliPlace?.coordinates.longitude.toFixed(4)}° E
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: fontSFProTextRegular,
+              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: dimensions.width * 0.037,
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              fontWeight: 400,
+              paddingHorizontal: dimensions.width * 0.05,
+              marginTop: dimensions.height * 0.025,
+            }}>
+            Description
+          </Text>
+
+          <Text
+            style={{
+              fontFamily: fontSFProTextRegular,
+              color: 'white',
+              fontSize: dimensions.width * 0.04,
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              fontWeight: 400,
+              paddingHorizontal: dimensions.width * 0.05,
+              marginTop: dimensions.height * 0.01,
+            }}>
+            {selectedMindliPlace?.description}
+          </Text>
+        </SafeAreaView>
       </Modal>
     </View>
   );
