@@ -16,7 +16,7 @@ import defectiveCoinsData from '../components/defectiveCoinsData';
 
 const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
 
-const EncyclopediaScreen = ({ setSelectedCoinCollectorScreen }) => {
+const EncyclopediaScreen = ({ setSelectedMindliSunsetBeachScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [defectiveCoinModalVisivle, setDefectiveCoinModalVisivle] = useState(false);
   const [coinDetailsModalVisible, setCoinDetailsModalVisible] = useState(false);
@@ -57,7 +57,7 @@ const EncyclopediaScreen = ({ setSelectedCoinCollectorScreen }) => {
             if (isDefectiveCoinsVisible) {
               setIsDefectiveCoinsVisible(false);
             } else {
-              setSelectedCoinCollectorScreen('Home');
+              setSelectedMindliSunsetBeachScreen('Home');
             }
           }}
           style={{

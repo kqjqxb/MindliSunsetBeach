@@ -15,12 +15,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SettingsScreen from './SettingsScreen';
-import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowUpRightIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import * as ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 
 import mindliPlacesData from '../components/mindliPlacesData';
-import coastalBitesData from '../components/coastalBitesData';
 
 import CollectionDetailsScreen from './CollectionDetailsScreen';
 import EncyclopediaScreen from './EncyclopediaScreen';
@@ -58,7 +57,7 @@ const bottomBtns = [
 
 const HomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedCoinCollectorScreen, setSelectedCoinCollectorScreen] = useState('Home');
+  const [selectedMindliSunsetBeachScreen, setSelectedMindliSunsetBeachScreen] = useState('Home');
 
   const [newMindliPlaceModalVisible, setNewMindliPlaceModalVisible] = useState(false);
 
@@ -72,6 +71,9 @@ const HomeScreen = () => {
   const [selectedMindliPlace, setSelectedMindliPlace] = useState(null);
   const [isMindliPlaceDetailsModalVisible, setIsMindliPlaceDetailsModalVisible] = useState(false);
   const [isMindliLocationAdded, setIsMindliLocationAdded] = useState(false);
+  const [isNotificationEnabled, setNotificationEnabled] = useState(true);
+  const [temperatureValue, setTemperatureValue] = useState("°C");
+  const [windSpeedValue, setWindSpeedValue] = useState("m/s");
   const scrollViewRef = useRef(null);
 
   const [newPlaceCoordinates, setNewPlaceCoordinates] = useState({
@@ -79,9 +81,34 @@ const HomeScreen = () => {
     longitude: 130.82960082352463,
   });
 
+  const loadMindliBeachSettings = async () => {
+    try {
+      const notificationMindliBeachValue = await AsyncStorage.getItem('isNotificationEnabled');
+      if (notificationMindliBeachValue !== null) {
+        setNotificationEnabled(JSON.parse(notificationMindliBeachValue));
+      }
+
+      let storedTemperature = await AsyncStorage.getItem('temperatureValue');
+      if (storedTemperature === null) {
+        storedTemperature = "°C";
+        await AsyncStorage.setItem('temperatureValue', storedTemperature);
+      }
+      setTemperatureValue(storedTemperature);
+
+      let storedWindSpeed = await AsyncStorage.getItem('windSpeedValue');
+      if (storedWindSpeed === null) {
+        storedWindSpeed = "m/s ";
+        await AsyncStorage.setItem('windSpeedValue', storedWindSpeed);
+      }
+      setWindSpeedValue(storedWindSpeed);
+    } catch (error) {
+      console.error("Error loading mindli settings:", error);
+    }
+  };
+
   useEffect(() => {
-    console.log('newPlaceCoordinates:', newPlaceCoordinates);
-  }, [newPlaceCoordinates])
+    loadMindliBeachSettings();
+  }, [isNotificationEnabled, selectedMindliSunsetBeachScreen]);
 
   const handleDeletemindliPlace = async (id) => {
     const updatedMindliPlaces = mindliPlaces.filter(item => item.id !== id);
@@ -197,7 +224,7 @@ const HomeScreen = () => {
       height: dimensions.height,
       width: dimensions.width,
     }}>
-      {selectedCoinCollectorScreen === 'Home' ? (
+      {selectedMindliSunsetBeachScreen === 'Home' ? (
         <SafeAreaView style={{
           flex: 1,
           paddingHorizontal: dimensions.width * 0.05,
@@ -224,7 +251,7 @@ const HomeScreen = () => {
               Favorite spots on the beach
             </Text>
             <TouchableOpacity
-              onPress={() => setSelectedCoinCollectorScreen('Settings')}
+              onPress={() => setSelectedMindliSunsetBeachScreen('Settings')}
               style={{
                 alignSelf: 'flex-start',
               }}>
@@ -528,17 +555,19 @@ const HomeScreen = () => {
 
 
         </SafeAreaView>
-      ) : selectedCoinCollectorScreen === 'Settings' ? (
-        <SettingsScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedCoinCollectorScreen={selectedCoinCollectorScreen} />
-      ) : selectedCoinCollectorScreen === 'CollectionDetails' ? (
-        <CollectionDetailsScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedMindliPlace={selectedMindliPlace} setSelectedMindliPlace={setSelectedMindliPlace} mindliPlaces={mindliPlaces} setMindliPlaces={setMindliPlaces} />
-      ) : selectedCoinCollectorScreen === 'Encyclopedia' ? (
-        <EncyclopediaScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} selectedCoinCollectorScreen={selectedCoinCollectorScreen} />
-      ) : selectedCoinCollectorScreen === 'CleanCoinGame' ? (
-        <CleanCoinGameScreen setSelectedCoinCollectorScreen={setSelectedCoinCollectorScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted} />
+      ) : selectedMindliSunsetBeachScreen === 'Settings' ? (
+        <SettingsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} setNotificationEnabled={setNotificationEnabled} isNotificationEnabled={isNotificationEnabled} 
+        temperatureValue={temperatureValue} setTemperatureValue={setTemperatureValue} windSpeedValue={windSpeedValue} setWindSpeedValue={setWindSpeedValue}
+        />
+      ) : selectedMindliSunsetBeachScreen === 'CollectionDetails' ? (
+        <CollectionDetailsScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliPlace={selectedMindliPlace} setSelectedMindliPlace={setSelectedMindliPlace} mindliPlaces={mindliPlaces} setMindliPlaces={setMindliPlaces} />
+      ) : selectedMindliSunsetBeachScreen === 'Encyclopedia' ? (
+        <EncyclopediaScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} selectedMindliSunsetBeachScreen={selectedMindliSunsetBeachScreen} />
+      ) : selectedMindliSunsetBeachScreen === 'CleanCoinGame' ? (
+        <CleanCoinGameScreen setSelectedMindliSunsetBeachScreen={setSelectedMindliSunsetBeachScreen} isCoinGameStarted={isCoinGameStarted} setIsCoinGameStarted={setIsCoinGameStarted} />
       ) : null}
 
-      {selectedCoinCollectorScreen !== 'CollectionDetails' && !(selectedCoinCollectorScreen === 'CleanCoinGame' && isCoinGameStarted) && (
+      {selectedMindliSunsetBeachScreen !== 'Settings' && !(selectedMindliSunsetBeachScreen === 'CleanCoinGame' && isCoinGameStarted) && (
         <View
           style={{
             position: 'absolute',
@@ -559,11 +588,11 @@ const HomeScreen = () => {
           {bottomBtns.map((button, index) => (
             <TouchableOpacity
               key={button.id}
-              onPress={() => setSelectedCoinCollectorScreen(button.mindliScreen)}
+              onPress={() => setSelectedMindliSunsetBeachScreen(button.mindliScreen)}
               style={{
                 padding: dimensions.height * 0.01,
                 alignItems: 'center',
-                opacity: selectedCoinCollectorScreen === button.mindliScreen ? 1 : 0.5,
+                opacity: selectedMindliSunsetBeachScreen === button.mindliScreen ? 1 : 0.5,
               }}
             >
               <Image

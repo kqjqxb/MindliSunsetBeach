@@ -19,7 +19,7 @@ import * as ImagePicker from 'react-native-image-picker';
 
 const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
 
-const CollectionDetailsScreen = ({ setSelectedCoinCollectorScreen, selectedCollection, coinCollection, setCoinCollection, setSelectedCollection }) => {
+const CollectionDetailsScreen = ({ setSelectedMindliSunsetBeachScreen, selectedCollection, coinCollection, setCoinCollection, setSelectedCollection }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -84,7 +84,7 @@ const CollectionDetailsScreen = ({ setSelectedCoinCollectorScreen, selectedColle
     const updatedCollection = coinCollection.filter(item => item.id !== id);
     setCoinCollection(updatedCollection);
     await AsyncStorage.setItem('coinCollection', JSON.stringify(updatedCollection));
-    setSelectedCoinCollectorScreen('Home');
+    setSelectedMindliSunsetBeachScreen('Home');
 
   };
 
@@ -156,7 +156,7 @@ const CollectionDetailsScreen = ({ setSelectedCoinCollectorScreen, selectedColle
       }}>
         <TouchableOpacity
           onPress={() => {
-            setSelectedCoinCollectorScreen('Home');
+            setSelectedMindliSunsetBeachScreen('Home');
           }}
           style={{
             flexDirection: 'row',

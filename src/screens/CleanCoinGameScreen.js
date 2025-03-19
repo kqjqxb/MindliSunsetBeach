@@ -18,7 +18,7 @@ const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
 const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
 
-const CleanCoinGameScreen = ({ setSelectedCoinCollectorScreen, isCoinGameStarted, setIsCoinGameStarted }) => {
+const CleanCoinGameScreen = ({ setSelectedMindliSunsetBeachScreen, isCoinGameStarted, setIsCoinGameStarted }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [isCoinCleaned, setIsCoinCleaned] = useState(false);
   const [randomCoin, setRandomCoin] = useState(null);
