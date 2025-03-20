@@ -11,12 +11,12 @@ import { UserProvider, UserContext } from './src/context/UserContext';
 import { Provider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { loadUserData } from './src/redux/userSlice';
-import LoadingCoinCollectorScreen from './src/screens/LoadingCoinCollectorScreen';
+import LoadingMindilSunsetBeachScreen from './src/screens/LoadingMindilSunsetBeachScreen';
 
 
 const Stack = createNativeStackNavigator();
 
-const CoinCollectorStack = () => {
+const MindliSunsetBeachStack = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
@@ -35,53 +35,53 @@ const AppNavigator = () => {
   const { user, setUser } = useContext(UserContext);
 
 
-  const [initializingCoinCollectorApp, setInitializingCoinCollectorApp] = useState(true);
+  const [initializingMindilSunsetApp, setInitializingMindilSunsetApp] = useState(true);
 
   useEffect(() => {
     dispatch(loadUserData());
   }, [dispatch]);
 
   useEffect(() => {
-    const loadCoinCollectorUser = async () => {
+    const loadMindilSunsetUser = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
         const storageKey = `currentUser_${deviceId}`;
-        const storedCoinCollectorUser = await AsyncStorage.getItem(storageKey);
+        const storedMindilSunsetUser = await AsyncStorage.getItem(storageKey);
 
-        if (storedCoinCollectorUser) {
-          setUser(JSON.parse(storedCoinCollectorUser));
+        if (storedMindilSunsetUser) {
+          setUser(JSON.parse(storedMindilSunsetUser));
         } 
       } catch (error) {
-        console.error('Error loading of coin collector user', error);
+        console.error('Error loading of mindil sunset user', error);
       } finally {
-        setInitializingCoinCollectorApp(false);
+        setInitializingMindilSunsetApp(false);
       }
     };
-    loadCoinCollectorUser();
+    loadMindilSunsetUser();
   }, [setUser]);
 
-  if (initializingCoinCollectorApp) {
+  if (initializingMindilSunsetApp) {
     return (
       <View style={{
-        backgroundColor: '#0068B7',
+        backgroundColor: '#141414',
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
       }}>
-        <ActivityIndicator size="large" color="white" />
+        <ActivityIndicator size="large" color="#AC9958" />
       </View>
     );
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'LoadingCoinCollectorScreen'}>
+      <Stack.Navigator initialRouteName={'LoadingMindilSunsetBeachScreen'}>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="LoadingCoinCollectorScreen" component={LoadingCoinCollectorScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LoadingMindilSunsetBeachScreen" component={LoadingMindilSunsetBeachScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 
-export default CoinCollectorStack;
+export default MindliSunsetBeachStack;

@@ -1284,8 +1284,6 @@ PODS:
     - Yoga
   - react-native-maps (1.20.1):
     - React-Core
-  - react-native-restart (0.0.27):
-    - React-Core
   - react-native-safe-area-context (5.3.0):
     - DoubleConversion
     - glog
@@ -1903,7 +1901,6 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
-  - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2031,8 +2028,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
-  react-native-restart:
-    :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
@@ -2152,7 +2147,6 @@ SPEC CHECKSUMS:
   react-native-blur: c4d838e8cd2896379328aec8a600c6ddad589c78
   react-native-image-picker: df2b20cdfa981f7288f4019774d9baa26a4772c1
   react-native-maps: 9febd31278b35cd21e4fad2cf6fa708993be5dab
-  react-native-restart: 0bc732f4461709022a742bb29bcccf6bbc5b4863
   react-native-safe-area-context: 0f14bce545abcdfbff79ce2e3c78c109f0be283e
   react-native-slider: bb7eb4732940fab78217e1c096bb647d8b0d1cf3
   React-NativeModulesApple: 88433b6946778bea9c153e27b671de15411bf225

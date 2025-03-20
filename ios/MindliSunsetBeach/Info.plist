@@ -31,22 +31,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to take photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to select images for your favorive places.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>SF-Pro-Display-Black.otf</string>
-		<string>SF-Pro-Display-Bold.otf</string>
-		<string>SF-Pro-Display-Medium.otf</string>
-		<string>SF-Pro-Display-Regular.otf</string>
-		<string>PlusJakartaSans-Bold.ttf</string>
-		<string>PlusJakartaSans-ExtraBold.ttf</string>
-		<string>PlusJakartaSans-Regular.ttf</string>
-		<string>PontanoSans-Bold.ttf</string>
-		<string>PontanoSans-Light.ttf</string>
-		<string>PontanoSans-Medium.ttf</string>
-		<string>PontanoSans-Regular.ttf</string>
-		<string>PontanoSans-SemiBold.ttf</string>
 		<string>SFProText-Bold.ttf</string>
 		<string>SFProText-Heavy.ttf</string>
 		<string>SFProText-Medium.ttf</string>

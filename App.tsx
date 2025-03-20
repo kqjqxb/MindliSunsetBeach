@@ -1,8 +1,8 @@
 import React from 'react';
-import CoinCollectorStack from './StackNavigator';
+import MindliSunsetBeachStack from './StackNavigator';
 
 function App() {
-  return <CoinCollectorStack />;
+  return <MindliSunsetBeachStack />;
 }
 
 export default App;

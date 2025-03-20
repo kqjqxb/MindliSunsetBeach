@@ -21,6 +21,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const fontSFProTextRegular = 'SFProText-Regular';
 
@@ -29,12 +30,16 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   const [listOfItems, setListOfItems] = useState([]);
   const [events, setEvents] = useState([]);
   const [favoriteSpots, setFavoriteSpots] = useState([]);
-  const [selectedMindliEvent, setSelectedMindliEvent] = useState(null);
-  const [isMindliEventDetailsVisible, setIsMindliEventDetailsVisible] = useState(false);
+  const [selectedMindliSpot, setSelectedMindliSpot] = useState(null);
+  const [isMindliSpotDetailsVisible, setIsMindliSpotDetailsVisible] = useState(false);
+  const [activeSwipeableId, setActiveSwipeableId] = useState(null);
+  const [typeofDelete, setTypeOfDelete] = useState('');
+
   const [addingItemType, setAddingItemType] = useState('');
   const [isItemAdded, setIsItemAdded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const mindliScrollViewRef = useRef(null);
+  const swipeableRefs = useRef(new Map());
 
   const [newMindliSpotImage, setNewMindliSpotImage] = useState('');
   const [newMindliSpotTitle, setNewMindliPlaceTitle] = useState('');
@@ -48,7 +53,6 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [initialMinDate, setInitialMinDate] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedRepeat, setSelectedRepeat] = useState('');
   const [selectedNotification, setSelectedNotification] = useState('');
 
@@ -259,11 +263,98 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
     );
   };
 
-  const handleDeletemindliSpot = async (id) => {
-    const updatedMindliFavoriteSpots = favoriteSpots.filter(item => item.id !== id);
+  const handleDeleteMindliSpot = async (id) => {
+    const updatedMindliFavoriteSpots = favoriteSpots.filter(spot => spot.id !== id);
     setFavoriteSpots(updatedMindliFavoriteSpots);
     await AsyncStorage.setItem('favoriteSpots', JSON.stringify(updatedMindliFavoriteSpots));
-    console.log('favoriteSpots:', favoriteSpots);
+  };
+
+  const handleDeleteMindliItem = async (id) => {
+    const updatedMindliItems = listOfItems.filter(item => item.id !== id);
+    setListOfItems(updatedMindliItems);
+    await AsyncStorage.setItem('listOfItems', JSON.stringify(updatedMindliItems));
+  };
+
+  const handleDeleteMindliEvent = async (id) => {
+    const updatedMindliEvents = events.filter(ev => ev.id !== id);
+    setEvents(updatedMindliEvents);
+    await AsyncStorage.setItem('events', JSON.stringify(updatedMindliEvents));
+  };
+
+  const renderRightMindliItemActions = (item) => (
+    <TouchableOpacity
+      onPress={() => handleDeleteMindliItem(item.id)}
+      style={{
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        height: '100%',
+        width: 68,
+      }}
+    >
+      <Image
+        source={require('../assets/icons/redTrashMindliIcon.png')}
+        style={{
+          width: dimensions.width * 0.07,
+          height: dimensions.width * 0.07,
+          alignSelf: 'center',
+        }}
+        resizeMode='contain'
+      />
+    </TouchableOpacity>
+  );
+
+  const handleSwipeableMindliItemOpen = (id) => {
+    swipeableRefs.current.forEach((ref, key) => {
+      if (key !== id && ref) {
+        ref.close();
+      }
+    });
+    setActiveSwipeableId(id);
+  };
+
+  const handleSwipeableMindliItemClose = (id) => {
+    if (activeSwipeableId === id) {
+      setActiveSwipeableId(null);
+    }
+  };
+
+  const renderRightMindliEventActions = (item) => (
+    <TouchableOpacity
+      onPress={() => handleDeleteMindliEvent(item.id)}
+      style={{
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        height: '100%',
+        width: 68,
+      }}
+    >
+      <Image
+        source={require('../assets/icons/redTrashMindliIcon.png')}
+        style={{
+          width: dimensions.width * 0.07,
+          height: dimensions.width * 0.07,
+          alignSelf: 'center',
+        }}
+        resizeMode='contain'
+      />
+    </TouchableOpacity>
+  );
+
+  const handleSwipeableMindliEventOpen = (id) => {
+    swipeableRefs.current.forEach((ref, key) => {
+      if (key !== id && ref) {
+        ref.close();
+      }
+    });
+    setActiveSwipeableId(id);
+  };
+
+  const handleSwipeableMindliEventClose = (id) => {
+    if (activeSwipeableId === id) {
+      setActiveSwipeableId(null);
+    }
   };
 
   return (
@@ -335,81 +426,95 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         ) : (
           <>
             {listOfItems.map((item) => (
-              <View key={item.id} style={{
-                width: dimensions.width * 0.9,
-                alignSelf: 'center',
-                paddingHorizontal: dimensions.width * 0.05,
-                paddingVertical: dimensions.height * 0.016,
-                backgroundColor: '#2C2C2C',
-                borderRadius: dimensions.width * 0.07,
-                marginTop: dimensions.height * 0.01,
-              }}>
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+              <Swipeable
+                key={item.id}
+                ref={(ref) => {
+                  if (ref) {
+                    swipeableRefs.current.set(item.id, ref);
+                  } else {
+                    swipeableRefs.current.delete(item.id);
+                  }
+                }}
+                renderRightActions={() => renderRightMindliItemActions(item)}
+                onSwipeableOpen={() => handleSwipeableMindliItemOpen(item.id)}
+                onSwipeableClose={() => handleSwipeableMindliItemClose(item.id)}
+              >
+                <View key={item.id} style={{
+                  width: dimensions.width * 0.9,
                   alignSelf: 'center',
-                  width: dimensions.width * 0.8,
+                  paddingHorizontal: dimensions.width * 0.05,
+                  paddingVertical: dimensions.height * 0.016,
+                  backgroundColor: '#2C2C2C',
+                  borderRadius: dimensions.width * 0.07,
+                  marginTop: dimensions.height * 0.01,
                 }}>
-                  <Text
-                    style={{
-                      fontFamily: fontSFProTextRegular,
-                      color: '#181A29',
-                      fontSize: dimensions.width * 0.048,
-                      textAlign: 'left',
-                      alignSelf: 'flex-start',
-                      fontWeight: 400,
-                      maxWidth: dimensions.width * 0.61,
-                      color: 'white',
-                    }}
-                    numberOfLines={1}
-                    ellipsizeMode='tail'
-                  >
-                    {item.title}
-                  </Text>
-
                   <View style={{
-                    width: dimensions.width * 0.21,
-                    height: dimensions.height * 0.04,
-                    backgroundColor: '#AC9958',
-                    borderRadius: dimensions.width * 0.1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    width: dimensions.width * 0.8,
                   }}>
                     <Text
                       style={{
                         fontFamily: fontSFProTextRegular,
                         color: '#181A29',
-                        fontSize: dimensions.width * 0.043,
-                        textAlign: 'center',
+                        fontSize: dimensions.width * 0.048,
+                        textAlign: 'left',
+                        alignSelf: 'flex-start',
                         fontWeight: 400,
+                        maxWidth: dimensions.width * 0.61,
                         color: 'white',
                       }}
                       numberOfLines={1}
                       ellipsizeMode='tail'
                     >
-                      {item.itemPriority}
+                      {item.title}
                     </Text>
-                  </View>
-                </View>
 
-                <Text
-                  style={{
-                    fontFamily: fontSFProTextRegular,
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    fontWeight: 400,
-                    maxWidth: dimensions.width * 0.75,
-                    marginTop: dimensions.height * 0.005,
-                  }}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {item.numberOfPieces} piece
-                </Text>
-              </View>
+                    <View style={{
+                      width: dimensions.width * 0.21,
+                      height: dimensions.height * 0.04,
+                      backgroundColor: '#AC9958',
+                      borderRadius: dimensions.width * 0.1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Text
+                        style={{
+                          fontFamily: fontSFProTextRegular,
+                          color: '#181A29',
+                          fontSize: dimensions.width * 0.043,
+                          textAlign: 'center',
+                          fontWeight: 400,
+                          color: 'white',
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                      >
+                        {item.itemPriority}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text
+                    style={{
+                      fontFamily: fontSFProTextRegular,
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      fontSize: dimensions.width * 0.04,
+                      textAlign: 'left',
+                      alignSelf: 'flex-start',
+                      fontWeight: 400,
+                      maxWidth: dimensions.width * 0.75,
+                      marginTop: dimensions.height * 0.005,
+                    }}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {item.numberOfPieces} piece{item.numberOfPieces > 1 ? 's' : ''}
+                  </Text>
+                </View>
+              </Swipeable>
             ))}
           </>
         )}
@@ -460,105 +565,120 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         ) : (
           <>
             {events.map((event) => (
-              <View key={event.id} style={{
-                width: dimensions.width * 0.9,
-                alignSelf: 'center',
-                paddingHorizontal: dimensions.width * 0.05,
-                paddingVertical: dimensions.height * 0.016,
-                backgroundColor: '#2C2C2C',
-                borderRadius: dimensions.width * 0.07,
-                marginTop: dimensions.height * 0.01,
-              }}>
-                <Text
-                  style={{
-                    fontFamily: fontSFProTextRegular,
-                    color: '#181A29',
-                    fontSize: dimensions.width * 0.043,
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    fontWeight: 400,
-                    maxWidth: dimensions.width * 0.8,
-                    color: 'white',
-                  }}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {event.title}
-                </Text>
-
-                <Text
-                  style={{
-                    fontFamily: fontSFProTextRegular,
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    fontWeight: 400,
-                    maxWidth: dimensions.width * 0.75,
-                    marginTop: dimensions.height * 0.01,
-                  }}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {formatDate(event.date)} {'   '} {formatTime(event.time)}
-                </Text>
-
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  marginTop: dimensions.height * 0.014,
+              <Swipeable
+                key={event.id}
+                ref={(ref) => {
+                  if (ref) {
+                    swipeableRefs.current.set(event.id, ref);
+                  } else {
+                    swipeableRefs.current.delete(event.id);
+                  }
+                }}
+                renderRightActions={() => renderRightMindliEventActions(event)}
+                onSwipeableOpen={() => handleSwipeableMindliEventOpen(event.id)}
+                onSwipeableClose={() => handleSwipeableMindliEventClose(event.id)}
+              >
+                <View key={event.id} style={{
+                  width: dimensions.width * 0.9,
+                  alignSelf: 'center',
+                  paddingHorizontal: dimensions.width * 0.05,
+                  paddingVertical: dimensions.height * 0.016,
+                  backgroundColor: '#2C2C2C',
+                  borderRadius: dimensions.width * 0.07,
+                  marginTop: dimensions.height * 0.01,
                 }}>
-                  <View style={{
-                    paddingHorizontal: dimensions.width * 0.04,
-                    height: dimensions.height * 0.04,
-                    backgroundColor: '#595959',
-                    borderRadius: dimensions.width * 0.1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: dimensions.width * 0.01,
-                  }}>
-                    <Text
-                      style={{
-                        fontFamily: fontSFProTextRegular,
-                        color: '#181A29',
-                        fontSize: dimensions.width * 0.043,
-                        textAlign: 'center',
-                        fontWeight: 400,
-                        color: 'white',
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode='tail'
-                    >
-                      {event.repeat}
-                    </Text>
-                  </View>
+                  <Text
+                    style={{
+                      fontFamily: fontSFProTextRegular,
+                      color: '#181A29',
+                      fontSize: dimensions.width * 0.043,
+                      textAlign: 'left',
+                      alignSelf: 'flex-start',
+                      fontWeight: 400,
+                      maxWidth: dimensions.width * 0.8,
+                      color: 'white',
+                    }}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {event.title}
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontFamily: fontSFProTextRegular,
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      fontSize: dimensions.width * 0.04,
+                      textAlign: 'left',
+                      alignSelf: 'flex-start',
+                      fontWeight: 400,
+                      maxWidth: dimensions.width * 0.75,
+                      marginTop: dimensions.height * 0.01,
+                    }}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {formatDate(event.date)} {'   '} {formatTime(event.time)}
+                  </Text>
 
                   <View style={{
-                    paddingHorizontal: dimensions.width * 0.04,
-                    height: dimensions.height * 0.04,
-                    backgroundColor: '#595959',
-                    borderRadius: dimensions.width * 0.1,
+                    flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
+                    marginTop: dimensions.height * 0.014,
                   }}>
-                    <Text
-                      style={{
-                        fontFamily: fontSFProTextRegular,
-                        color: '#181A29',
-                        fontSize: dimensions.width * 0.043,
-                        textAlign: 'center',
-                        fontWeight: 400,
-                        color: 'white',
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode='tail'
-                    >
-                      {event.notification}
-                    </Text>
+                    <View style={{
+                      paddingHorizontal: dimensions.width * 0.04,
+                      height: dimensions.height * 0.04,
+                      backgroundColor: '#595959',
+                      borderRadius: dimensions.width * 0.1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: dimensions.width * 0.01,
+                    }}>
+                      <Text
+                        style={{
+                          fontFamily: fontSFProTextRegular,
+                          color: '#181A29',
+                          fontSize: dimensions.width * 0.043,
+                          textAlign: 'center',
+                          fontWeight: 400,
+                          color: 'white',
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                      >
+                        {event.repeat}
+                      </Text>
+                    </View>
+
+                    <View style={{
+                      paddingHorizontal: dimensions.width * 0.04,
+                      height: dimensions.height * 0.04,
+                      backgroundColor: '#595959',
+                      borderRadius: dimensions.width * 0.1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Text
+                        style={{
+                          fontFamily: fontSFProTextRegular,
+                          color: '#181A29',
+                          fontSize: dimensions.width * 0.043,
+                          textAlign: 'center',
+                          fontWeight: 400,
+                          color: 'white',
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                      >
+                        {event.notification}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
+
+              </Swipeable>
             ))}
           </>
         )}
@@ -618,8 +738,8 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
               <TouchableOpacity
                 key={favoriteSpot.id}
                 onPress={() => {
-                  setSelectedMindliEvent(favoriteSpot);
-                  setIsMindliEventDetailsVisible(true);
+                  setSelectedMindliSpot(favoriteSpot);
+                  setIsMindliSpotDetailsVisible(true);
                 }}
                 style={{
                   width: dimensions.width * 0.44,
@@ -704,9 +824,9 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={isMindliEventDetailsVisible}
+        visible={isMindliSpotDetailsVisible}
         onRequestClose={() => {
-          setIsMindliEventDetailsVisible(!isMindliEventDetailsVisible);
+          setIsMindliSpotDetailsVisible(!isMindliSpotDetailsVisible);
         }}
       >
         <SafeAreaView style={{
@@ -725,8 +845,8 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
           }}>
             <TouchableOpacity
               onPress={() => {
-                setIsMindliEventDetailsVisible(false);
-                setSelectedMindliEvent(null);
+                setIsMindliSpotDetailsVisible(false);
+                setSelectedMindliSpot(null);
               }}
               style={{
                 flexDirection: 'row',
@@ -752,11 +872,11 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
               paddingHorizontal: dimensions.width * 0.05,
               marginTop: dimensions.height * 0.016,
             }}>
-            {selectedMindliEvent?.title}
+            {selectedMindliSpot?.title}
           </Text>
 
           <Image
-            source={{ uri: selectedMindliEvent?.image }}
+            source={{ uri: selectedMindliSpot?.image }}
             style={{
               width: dimensions.width * 0.9,
               height: dimensions.height * 0.21,
@@ -792,7 +912,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
               paddingHorizontal: dimensions.width * 0.05,
               marginTop: dimensions.height * 0.01,
             }}>
-            {selectedMindliEvent?.coordinates.latitude.toFixed(4)}° N, {selectedMindliEvent?.coordinates.longitude.toFixed(4)}° E
+            {selectedMindliSpot?.coordinates.latitude.toFixed(4)}° N, {selectedMindliSpot?.coordinates.longitude.toFixed(4)}° E
           </Text>
 
           <Text
@@ -820,13 +940,13 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
               paddingHorizontal: dimensions.width * 0.05,
               marginTop: dimensions.height * 0.01,
             }}>
-            {selectedMindliEvent?.description}
+            {selectedMindliSpot?.description}
           </Text>
 
           <TouchableOpacity
             onPress={() => {
-              handleDeletemindliSpot(selectedMindliEvent.id);
-              setIsMindliEventDetailsVisible(false);
+              handleDeleteMindliSpot(selectedMindliSpot.id);
+              setIsMindliSpotDetailsVisible(false);
             }}
             style={{
               width: dimensions.width * 0.9,
@@ -1483,7 +1603,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
             </TouchableOpacity>
 
             <Image
-              source={require('../assets/images/mindliLocationAddedImage.png')}
+              source={require('../assets/images/palmsSettingsImage.png')}
               style={{
                 width: dimensions.width * 0.75,
                 height: dimensions.height * 0.34,
@@ -1492,6 +1612,18 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
               }}
               resizeMode='contain'
             />
+            <Text
+              style={{
+                fontFamily: fontSFProTextRegular,
+                color: 'white',
+                fontSize: dimensions.width * 0.111,
+                textAlign: 'right',
+                alignSelf: 'center',
+                fontWeight: 400,
+                marginTop: -dimensions.height * 0.01,
+              }}>
+              {addingItemType} added
+            </Text>
           </SafeAreaView>
         )}
       </Modal>

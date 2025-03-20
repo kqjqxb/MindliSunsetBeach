@@ -8,55 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-MindliSunsetBeach.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-MindliSunsetBeach.a */; };
-		0ED72C6E81B940DFB9275E37 /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D10D2D30D654C10BD578094 /* PlusJakartaSans-Regular.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1449420C45A549A3BC574129 /* PontanoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0ED5946BEF11473784466D01 /* PontanoSans-SemiBold.ttf */; };
-		16E0FDBEFFEC4F9292570023 /* PontanoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5AF1C7768A4C3CB4B3E081 /* PontanoSans-Bold.ttf */; };
-		3EDEBA2C1C74488497FCA440 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 448E3F075296491AA0169E0E /* SF-Pro-Display-Regular.otf */; };
-		42E11E3C4FD14D809DCA8E8B /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C2D1A4F004B96AD4D30F3 /* PlusJakartaSans-ExtraBold.ttf */; };
 		462670EA0B5310A911ACB7E2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		55A4844800FC47FFBB665FE8 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1505443EDA8A40CA8630A7ED /* SFProText-Regular.ttf */; };
-		612449875B1F4C3BA924E592 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7EA85C890FCD4EE1A9B8E32E /* SF-Pro-Display-Bold.otf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		83597471A6824EA0BF033021 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = F4137238516946998DCC56D2 /* SF-Pro-Display-Medium.otf */; };
-		8547CB17CC80471C975CC197 /* SF-Pro-Display-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 21FF1C365FB24ACFBA69FD2B /* SF-Pro-Display-Black.otf */; };
-		8E03985001A74874852C9F02 /* PontanoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C32C924840C1465CA3976153 /* PontanoSans-Regular.ttf */; };
-		90472770841A4E2C8DC8C3D7 /* PontanoSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C85B88EFB2CC4C8E8F1F21B0 /* PontanoSans-Light.ttf */; };
-		995BCE732FDA4CE484B50C25 /* PontanoSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C380AC658841AB9B4672B7 /* PontanoSans-Medium.ttf */; };
 		9AC9CDF51FE548D7B79F82F0 /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F979D1E6DA54070889CE8CD /* SFProText-Bold.ttf */; };
-		9ECA80D9CD2240AA8A6944D4 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1EF58E0E44743EE8679FC85 /* PlusJakartaSans-Bold.ttf */; };
 		E1A4D7F41C6C4A2A95282BB6 /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF57F7E1E8644E2CAECA56CE /* SFProText-Medium.ttf */; };
 		F1ADCE7CEB6C4AF598A69732 /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41F22A07A46B47B6BD6F09DA /* SFProText-Heavy.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0ED5946BEF11473784466D01 /* PontanoSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PontanoSans-SemiBold.ttf"; path = "../src/assets/fonts/PontanoSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* MindliSunsetBeach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindliSunsetBeach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MindliSunsetBeach/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MindliSunsetBeach/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = MindliSunsetBeach/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1505443EDA8A40CA8630A7ED /* SFProText-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Regular.ttf"; path = "../src/assets/fonts/SFProText-Regular.ttf"; sourceTree = "<group>"; };
-		1D10D2D30D654C10BD578094 /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlusJakartaSans-Regular.ttf"; path = "../src/assets/fonts/PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; };
-		21FF1C365FB24ACFBA69FD2B /* SF-Pro-Display-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Black.otf"; path = "../src/assets/fonts/SF-Pro-Display-Black.otf"; sourceTree = "<group>"; };
-		35C380AC658841AB9B4672B7 /* PontanoSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PontanoSans-Medium.ttf"; path = "../src/assets/fonts/PontanoSans-Medium.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-MindliSunsetBeach.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MindliSunsetBeach.debug.xcconfig"; path = "Target Support Files/Pods-MindliSunsetBeach/Pods-MindliSunsetBeach.debug.xcconfig"; sourceTree = "<group>"; };
 		41F22A07A46B47B6BD6F09DA /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Heavy.ttf"; path = "../src/assets/fonts/SFProText-Heavy.ttf"; sourceTree = "<group>"; };
-		448E3F075296491AA0169E0E /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Regular.otf"; path = "../src/assets/fonts/SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-MindliSunsetBeach.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MindliSunsetBeach.release.xcconfig"; path = "Target Support Files/Pods-MindliSunsetBeach/Pods-MindliSunsetBeach.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-MindliSunsetBeach.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MindliSunsetBeach.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F0C2D1A4F004B96AD4D30F3 /* PlusJakartaSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlusJakartaSans-ExtraBold.ttf"; path = "../src/assets/fonts/PlusJakartaSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = MindliSunsetBeach/AppDelegate.swift; sourceTree = "<group>"; };
-		7EA85C890FCD4EE1A9B8E32E /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.otf"; path = "../src/assets/fonts/SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MindliSunsetBeach/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F979D1E6DA54070889CE8CD /* SFProText-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Bold.ttf"; path = "../src/assets/fonts/SFProText-Bold.ttf"; sourceTree = "<group>"; };
 		BF57F7E1E8644E2CAECA56CE /* SFProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Medium.ttf"; path = "../src/assets/fonts/SFProText-Medium.ttf"; sourceTree = "<group>"; };
-		C32C924840C1465CA3976153 /* PontanoSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PontanoSans-Regular.ttf"; path = "../src/assets/fonts/PontanoSans-Regular.ttf"; sourceTree = "<group>"; };
-		C85B88EFB2CC4C8E8F1F21B0 /* PontanoSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PontanoSans-Light.ttf"; path = "../src/assets/fonts/PontanoSans-Light.ttf"; sourceTree = "<group>"; };
-		DD5AF1C7768A4C3CB4B3E081 /* PontanoSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PontanoSans-Bold.ttf"; path = "../src/assets/fonts/PontanoSans-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F1EF58E0E44743EE8679FC85 /* PlusJakartaSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlusJakartaSans-Bold.ttf"; path = "../src/assets/fonts/PlusJakartaSans-Bold.ttf"; sourceTree = "<group>"; };
-		F4137238516946998DCC56D2 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Medium.otf"; path = "../src/assets/fonts/SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,18 +101,6 @@
 		9A46741CA6BA45E4BB9A7555 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				21FF1C365FB24ACFBA69FD2B /* SF-Pro-Display-Black.otf */,
-				7EA85C890FCD4EE1A9B8E32E /* SF-Pro-Display-Bold.otf */,
-				F4137238516946998DCC56D2 /* SF-Pro-Display-Medium.otf */,
-				448E3F075296491AA0169E0E /* SF-Pro-Display-Regular.otf */,
-				F1EF58E0E44743EE8679FC85 /* PlusJakartaSans-Bold.ttf */,
-				6F0C2D1A4F004B96AD4D30F3 /* PlusJakartaSans-ExtraBold.ttf */,
-				1D10D2D30D654C10BD578094 /* PlusJakartaSans-Regular.ttf */,
-				DD5AF1C7768A4C3CB4B3E081 /* PontanoSans-Bold.ttf */,
-				C85B88EFB2CC4C8E8F1F21B0 /* PontanoSans-Light.ttf */,
-				35C380AC658841AB9B4672B7 /* PontanoSans-Medium.ttf */,
-				C32C924840C1465CA3976153 /* PontanoSans-Regular.ttf */,
-				0ED5946BEF11473784466D01 /* PontanoSans-SemiBold.ttf */,
 				8F979D1E6DA54070889CE8CD /* SFProText-Bold.ttf */,
 				41F22A07A46B47B6BD6F09DA /* SFProText-Heavy.ttf */,
 				BF57F7E1E8644E2CAECA56CE /* SFProText-Medium.ttf */,
@@ -217,18 +181,6 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				462670EA0B5310A911ACB7E2 /* PrivacyInfo.xcprivacy in Resources */,
-				8547CB17CC80471C975CC197 /* SF-Pro-Display-Black.otf in Resources */,
-				612449875B1F4C3BA924E592 /* SF-Pro-Display-Bold.otf in Resources */,
-				83597471A6824EA0BF033021 /* SF-Pro-Display-Medium.otf in Resources */,
-				3EDEBA2C1C74488497FCA440 /* SF-Pro-Display-Regular.otf in Resources */,
-				9ECA80D9CD2240AA8A6944D4 /* PlusJakartaSans-Bold.ttf in Resources */,
-				42E11E3C4FD14D809DCA8E8B /* PlusJakartaSans-ExtraBold.ttf in Resources */,
-				0ED72C6E81B940DFB9275E37 /* PlusJakartaSans-Regular.ttf in Resources */,
-				16E0FDBEFFEC4F9292570023 /* PontanoSans-Bold.ttf in Resources */,
-				90472770841A4E2C8DC8C3D7 /* PontanoSans-Light.ttf in Resources */,
-				995BCE732FDA4CE484B50C25 /* PontanoSans-Medium.ttf in Resources */,
-				8E03985001A74874852C9F02 /* PontanoSans-Regular.ttf in Resources */,
-				1449420C45A549A3BC574129 /* PontanoSans-SemiBold.ttf in Resources */,
 				9AC9CDF51FE548D7B79F82F0 /* SFProText-Bold.ttf in Resources */,
 				F1ADCE7CEB6C4AF598A69732 /* SFProText-Heavy.ttf in Resources */,
 				E1A4D7F41C6C4A2A95282BB6 /* SFProText-Medium.ttf in Resources */,
@@ -450,7 +402,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -519,7 +474,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
