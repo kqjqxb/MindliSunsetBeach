@@ -11,11 +11,9 @@ import {
   Switch,
   Modal,
 } from 'react-native';
-import { ArrowLeftIcon, ChevronRightIcon, XCircleIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 
-const fontSFProDisplayRegular = 'SF-Pro-Display-Regular';
 const fontSFProTextRegular = 'SFProText-Regular';
-const fontSFProTextHeavy = 'SFProText-Heavy';
 
 const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnabled, setNotificationEnabled, temperatureValue, setTemperatureValue, windSpeedValue, setWindSpeedValue }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
@@ -153,22 +151,22 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={() => {
           setWindSpeedModalVisible(true);
         }}
-      style={{
-        width: dimensions.width * 0.9,
-        height: dimensions.height * 0.07,
-        borderRadius: dimensions.width * 0.1,
-        paddingHorizontal: dimensions.width * 0.034,
-        backgroundColor: '#2C2C2C',
-        alignSelf: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: dimensions.height * 0.005,
-      }}>
+        style={{
+          width: dimensions.width * 0.9,
+          height: dimensions.height * 0.07,
+          borderRadius: dimensions.width * 0.1,
+          paddingHorizontal: dimensions.width * 0.034,
+          backgroundColor: '#2C2C2C',
+          alignSelf: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: dimensions.height * 0.005,
+        }}>
         <Text
           style={{
             fontFamily: fontSFProTextRegular,

@@ -135,7 +135,7 @@ const HomeScreen = () => {
 
   const mindliData = getMindliDataByCategory(selectedPlacesCategory);
 
-  const loadCoinCollection = async () => {
+  const loadMindliPlaces = async () => {
     try {
       const storedMindliPlaces = await AsyncStorage.getItem('mindliPlaces');
       const parsedMindliPlaces = storedMindliPlaces ? JSON.parse(storedMindliPlaces) : [];
@@ -146,7 +146,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    loadCoinCollection();
+    loadMindliPlaces();
   }, []);
 
   const saveMindliPlace = async () => {
@@ -165,7 +165,6 @@ const HomeScreen = () => {
       await AsyncStorage.setItem('mindliPlaces', JSON.stringify(updatedMindliPlaces));
       setMindliPlaces(updatedMindliPlaces);
 
-      // setNewMindliPlaceModalVisible(false);
       setIsMindliLocationAdded(true);
 
       setNewMindliPlaceImage('');
@@ -211,10 +210,6 @@ const HomeScreen = () => {
       ]
     );
   };
-
-  useEffect(() => {
-    console.log('mindliPlaces:', mindliPlaces);
-  }, [mindliPlaces])
 
   return (
     <View style={{
@@ -631,7 +626,6 @@ const HomeScreen = () => {
         }}
       >
         {!isMindliLocationAdded ? (
-
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style={{
               flex: 1,
@@ -879,7 +873,6 @@ const HomeScreen = () => {
           </SafeAreaView>
         )}
       </Modal>
-
 
       <Modal
         animationType="slide"

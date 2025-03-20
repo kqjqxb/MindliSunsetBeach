@@ -7,15 +7,13 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  Linking,
-  Switch,
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
   Alert,
 } from 'react-native';
-import { ArrowLeftIcon, ChevronRightIcon, XCircleIcon, XMarkIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon,  XMarkIcon } from 'react-native-heroicons/solid';
 import NothingHereComponent from '../components/NothingHereComponent';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
@@ -33,7 +31,6 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   const [selectedMindliSpot, setSelectedMindliSpot] = useState(null);
   const [isMindliSpotDetailsVisible, setIsMindliSpotDetailsVisible] = useState(false);
   const [activeSwipeableId, setActiveSwipeableId] = useState(null);
-  const [typeofDelete, setTypeOfDelete] = useState('');
 
   const [addingItemType, setAddingItemType] = useState('');
   const [isItemAdded, setIsItemAdded] = useState(false);
@@ -120,7 +117,6 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
     return `${hours}:${minutes}`;
   };
 
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -158,7 +154,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   });
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadMindliData = async () => {
       try {
         const storedItems = await AsyncStorage.getItem('listOfItems');
         const parsedItems = storedItems ? JSON.parse(storedItems) : [];
@@ -184,7 +180,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
       }
     };
 
-    loadData();
+    loadMindliData();
   }, []);
 
   const saveMindliPlace = async () => {
@@ -202,9 +198,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
       const newMindliFavoriteSpots = [newMindliPlace, ...favoriteSpots];
       await AsyncStorage.setItem('favoriteSpots', JSON.stringify(newMindliFavoriteSpots));
       setFavoriteSpots(newMindliFavoriteSpots);
-
       setIsItemAdded(true);
-
       setNewMindliSpotImage('');
       setNewMindliPlaceTitle('');
       setNewMindliSpotDescription('');
@@ -220,7 +214,6 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   const handleTimeChange = (event, selectedTime) => {
     if (selectedTime) {
       const now = new Date();
-      // Якщо обрано сьогоднішній день, то перевіряємо час
       if (date.toDateString() === now.toDateString()) {
         if (selectedTime < now) {
           setTime(now);
@@ -231,12 +224,10 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
     }
   };
 
-  const handleMindliSunsetImagePicker = () => {
+  const handleMindliSunsetPlaceImagePicker = () => {
     ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
       } else {
         setNewMindliSpotImage(response.assets[0].uri);
       }
@@ -1045,7 +1036,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                 <>
                   {newMindliSpotImage === '' || !newMindliSpotImage ? (
                     <TouchableOpacity
-                      onPress={() => handleMindliSunsetImagePicker()}
+                      onPress={() => handleMindliSunsetPlaceImagePicker()}
                       style={{
                         borderRadius: dimensions.width * 0.088,
                         backgroundColor: '#2C2C2C',

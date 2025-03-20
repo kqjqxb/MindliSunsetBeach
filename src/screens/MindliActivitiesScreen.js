@@ -10,7 +10,6 @@ import {
   Modal,
 } from 'react-native';
 import { ArrowLeftIcon, } from 'react-native-heroicons/solid';
-import NothingHereComponent from '../components/NothingHereComponent';
 import { ScrollView } from 'react-native-gesture-handler';
 import availableActivitiesData from '../components/availableActivitiesData';
 import whatCanBeFoundData from '../components/whatCanBeFoundData';
@@ -39,21 +38,9 @@ const hoursOfOperation = [
 
 const MindliActivitiesScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [listOfItems, setListOfItems] = useState([1]);
   const [selectedMindliActivity, setSelectedMindliActivity] = useState(null);
-  const [events, setEvents] = useState([1]);
-  const [favoriteSpots, setFavoriteSpots] = useState([1]);
-  const [selectedMindliEvent, setSelectedMindliEvent] = useState(null);
   const [isMindliEventDetailsVisible, setIsMindliEventDetailsVisible] = useState(false);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const mindliScrollViewRef = useRef(null);
-
-  useEffect(() => {
-    if (mindliScrollViewRef.current) {
-      mindliScrollViewRef.current.scrollTo({ y: 0, animated: true });
-    }
-  }, [modalVisible]);
 
   return (
     <SafeAreaView style={{
@@ -104,7 +91,6 @@ const MindliActivitiesScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         paddingTop: dimensions.height * 0.01,
         paddingBottom: dimensions.height * 0.16,
       }} showsVerticalScrollIndicator={false}
-        ref={mindliScrollViewRef}
       >
         <Text
           style={{
@@ -183,7 +169,6 @@ const MindliActivitiesScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
             </TouchableOpacity>
           ))}
         </View>
-
 
         <Text
           style={{
@@ -416,7 +401,7 @@ const MindliActivitiesScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
             <TouchableOpacity
               onPress={() => {
                 setIsMindliEventDetailsVisible(false);
-                setSelectedMindliEvent(null);
+                setSelectedMindliActivity(null);
               }}
               style={{
                 flexDirection: 'row',

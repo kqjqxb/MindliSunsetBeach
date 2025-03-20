@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 const LoadingMindilSunsetBeachScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const navigation = useNavigation();
-  const [percentage, setPercentage] = useState(0);
 
   const animatedOpacity = useRef(new Animated.Value(0)).current;
 
@@ -21,7 +20,7 @@ const LoadingMindilSunsetBeachScreen = () => {
     setTimeout(() => {
       navigation.replace('Home');
     }, [3000]);
-  }, [percentage]);
+  }, []);
 
   return (
     <View style={{
