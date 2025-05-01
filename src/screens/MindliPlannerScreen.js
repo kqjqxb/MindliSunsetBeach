@@ -395,7 +395,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         alignSelf: 'center',
       }} contentContainerStyle={{
         paddingTop: dimensions.height * 0.01,
-        paddingBottom: dimensions.height * 0.16,
+        paddingBottom: dimensions.height * 0.163,
       }} showsVerticalScrollIndicator={false}
         ref={mindliScrollViewRef}
       >
@@ -787,7 +787,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         <TouchableOpacity
           onPress={() => {
             setModalVisible(true);
-            setAddingItemType('Seat');
+            setAddingItemType('Spot');
           }}
           style={{
             width: dimensions.width * 0.9,
@@ -1005,6 +1005,10 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                     setTime(new Date());
                     setSelectedRepeat('');
                     setSelectedNotification('');
+                    setItemName('');
+                    setNumberOfPieces(1);
+                    setItemPriority('');
+                    
                   }}
                   style={{
                     flexDirection: 'row',
@@ -1032,7 +1036,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                 </Text>
               </View>
 
-              {addingItemType === 'Seat' ? (
+              {addingItemType === 'Spot' ? (
                 <>
                   {newMindliSpotImage === '' || !newMindliSpotImage ? (
                     <TouchableOpacity
@@ -1105,7 +1109,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                       fontWeight: newMindliSpotTitle.length === 0 ? 400 : 600,
                       alignSelf: 'center',
                       width: dimensions.width * 0.9,
-                      padding: dimensions.width * 0.05,
+                      paddingHorizontal: dimensions.width * 0.05,
                       fontSize: dimensions.width * 0.043,
                       color: '#fff',
                       height: dimensions.height * 0.07,
@@ -1129,7 +1133,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                       fontWeight: newMindliSpotDescription.length === 0 ? 400 : 600,
                       alignSelf: 'center',
                       width: dimensions.width * 0.9,
-                      padding: dimensions.width * 0.05,
+                      paddingHorizontal: dimensions.width * 0.05,
                       fontSize: dimensions.width * 0.043,
                       color: '#fff',
                       height: dimensions.height * 0.16,
@@ -1199,7 +1203,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                   width: dimensions.width * 0.9,
                   alignSelf: 'center',
                 }} contentContainerStyle={{
-                  paddingBottom: dimensions.height * 0.16,
+                  paddingBottom: dimensions.height * 0.163,
                 }} showsVerticalScrollIndicator={false}>
                   <Image
                     source={require('../assets/images/palmsSettingsImage.png')}
@@ -1223,7 +1227,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                       fontWeight: eventName.length === 0 ? 400 : 600,
                       alignSelf: 'center',
                       width: dimensions.width * 0.9,
-                      padding: dimensions.width * 0.05,
+                      paddingHorizontal: dimensions.width * 0.05,
                       fontSize: dimensions.width * 0.043,
                       color: '#fff',
                       height: dimensions.height * 0.07,
@@ -1416,7 +1420,7 @@ const MindliPlannerScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
                       fontWeight: itemName.length === 0 ? 400 : 600,
                       alignSelf: 'center',
                       width: dimensions.width * 0.9,
-                      padding: dimensions.width * 0.05,
+                      paddingHorizontal: dimensions.width * 0.05,
                       fontSize: dimensions.width * 0.043,
                       color: '#fff',
                       height: dimensions.height * 0.07,

@@ -264,7 +264,7 @@ const HomeScreen = () => {
             width: dimensions.width * 0.9,
             alignSelf: 'center',
           }} contentContainerStyle={{
-            paddingBottom: dimensions.height * 0.142
+            paddingBottom: dimensions.height * 0.163
           }} ref={scrollViewRef} showsVerticalScrollIndicator={false}>
             <MapView
               style={{
@@ -774,7 +774,7 @@ const HomeScreen = () => {
                   fontWeight: newMindliPlaceTitle.length === 0 ? 400 : 600,
                   alignSelf: 'center',
                   width: dimensions.width * 0.9,
-                  padding: dimensions.width * 0.05,
+                  paddingHorizontal: dimensions.width * 0.05,
                   fontSize: dimensions.width * 0.043,
                   color: '#fff',
                   height: dimensions.height * 0.07,
@@ -798,10 +798,11 @@ const HomeScreen = () => {
                   fontWeight: newMindliPlaceDescription.length === 0 ? 400 : 600,
                   alignSelf: 'center',
                   width: dimensions.width * 0.9,
-                  padding: dimensions.width * 0.05,
+                  paddingHorizontal: dimensions.width * 0.05,
                   fontSize: dimensions.width * 0.043,
                   color: '#fff',
-                  height: dimensions.height * 0.16,
+                  height: dimensions.height * 0.19,
+                  paddingVertical: dimensions.height * 0.01,
                   fontFamily: fontSFProTextRegular,
                   borderRadius: dimensions.width * 0.1,
                   marginTop: dimensions.height * 0.01,

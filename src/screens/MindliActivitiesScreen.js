@@ -89,7 +89,7 @@ const MindliActivitiesScreen = ({ setSelectedMindliSunsetBeachScreen, }) => {
         alignSelf: 'center',
       }} contentContainerStyle={{
         paddingTop: dimensions.height * 0.01,
-        paddingBottom: dimensions.height * 0.16,
+        paddingBottom: dimensions.height * 0.163,
       }} showsVerticalScrollIndicator={false}
       >
         <Text
