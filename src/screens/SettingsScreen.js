@@ -7,11 +7,10 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  Linking,
   Switch,
   Modal,
 } from 'react-native';
-import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 
 const fontSFProTextRegular = 'SFProText-Regular';
 

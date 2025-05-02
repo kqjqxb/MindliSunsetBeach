@@ -19,10 +19,10 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
   const toggleNotificationSwitch = () => {
     const newValue = !isNotificationEnabled;
     setNotificationEnabled(newValue);
-    saveNotificationsSettings('isNotificationEnabled', newValue);
+    saveMindliNotificationsSettings('isNotificationEnabled', newValue);
   };
 
-  const saveNotificationsSettings = async (key, value) => {
+  const saveMindliNotificationsSettings = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
