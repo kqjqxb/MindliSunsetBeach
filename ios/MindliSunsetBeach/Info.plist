@@ -32,9 +32,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-<string>We need access to your camera to take photos.</string>
+<string>We need access to your camera to take photos of you spots.</string>
 <key>NSPhotoLibraryUsageDescription</key>
-<string>We need access to your photo library to select images for your favorive places.</string>
+<string>We need access to your photo library to select images for your favorive places or spots.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SFProText-Bold.ttf</string>

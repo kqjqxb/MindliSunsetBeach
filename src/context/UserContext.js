@@ -7,30 +7,21 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loadHereUser = async () => {
+    const loadMindliUser = async () => {
       try {
-        const storedHereUser = await AsyncStorage.getItem('currentUser');
-        if (storedHereUser) {
-          setUser(JSON.parse(storedHereUser));
+        const storedMindliUser = await AsyncStorage.getItem('currentUser');
+        if (storedMindliUser) {
+          setUser(JSON.parse(storedMindliUser));
         }
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('Error loading mindli user:', error);
       }
     };
-    loadHereUser();
+    loadMindliUser();
   }, []);
 
-  const logout = async () => {
-    try {
-      await AsyncStorage.removeItem('currentUser');
-      setUser(null);
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

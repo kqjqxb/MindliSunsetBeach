@@ -10,9 +10,9 @@ workflows:
         XCODE_WORKSPACE: "MindliSunsetBeach.xcworkspace" # <----
         XCODE_SCHEME: "MindliSunsetBeach" # <----
         BUNDLE_ID: "com.mindli.sunset.beach.app" # <----
-        APP_STORE_APP_ID: 6743238725 # <----
-        APP_STORE_CONNECT_KEY_ID: "M62P8R2SN2" # <----
-        APP_STORE_CONNECT_ISSUER_ID: "5133a975-6e3c-4245-b3a3-f76945278e34" # <----
+        APP_STORE_APP_ID: 6745400147 # <----
+        APP_STORE_CONNECT_KEY_ID: "P4KCKW98BB" # <----
+        APP_STORE_CONNECT_ISSUER_ID: "9db7914c-8461-4bec-96ba-439fb58d758f" # <----
         node: latest
         xcode: latest
         cocoapods: default
@@ -52,7 +52,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - zenonkubat1@gmail.com       # <----
+          - guidomichaelfriesheim@gmail.com       # <----
         notify:
           success: true
           failure: false

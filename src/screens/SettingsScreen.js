@@ -216,7 +216,7 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: dimensions.height * 0.019,
+        marginTop: dimensions.height * 0.005,
       }}>
         <Text
           style={{
@@ -237,46 +237,6 @@ const SettingsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnab
           value={isNotificationEnabled}
         />
       </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          Linking.openURL('');
-        }}
-        style={{
-          width: dimensions.width * 0.9,
-          height: dimensions.height * 0.07,
-          borderRadius: dimensions.width * 0.1,
-          paddingLeft: dimensions.width * 0.034,
-          paddingRight: dimensions.width * 0.014,
-          backgroundColor: '#2C2C2C',
-          alignSelf: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: dimensions.height * 0.005,
-        }}>
-        <Text
-          style={{
-            fontFamily: fontSFProTextRegular,
-            color: 'white',
-            fontSize: dimensions.width * 0.046,
-            textAlign: 'left',
-            fontWeight: 400,
-          }}>
-          Terms of Use
-        </Text>
-
-        <View style={{
-          backgroundColor: 'white',
-          width: dimensions.height * 0.055,
-          height: dimensions.height * 0.055,
-          borderRadius: dimensions.width * 0.1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <ChevronRightIcon size={dimensions.height * 0.028} color='black' />
-        </View>
-      </TouchableOpacity>
 
       <Modal
         animationType="fade"
