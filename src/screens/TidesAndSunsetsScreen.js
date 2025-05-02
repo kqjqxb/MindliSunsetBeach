@@ -16,7 +16,8 @@ const fontSFProTextRegular = 'SFProText-Regular';
 const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnabled, setNotificationEnabled, }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const styles = createMindliStyles(dimensions);
-  const toggleNotificationSwitch = () => {
+  const toggleMindliNotifiSwitch = () => {
+    setNewValue();
     const newValue = !isNotificationEnabled;
     setNotificationEnabled(newValue);
     saveMindliNotificationsSettings('isNotificationEnabled', newValue);
@@ -414,7 +415,7 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
             trackColor={{ false: '#2C2C2C', true: '#AC9958' }}
             thumbColor={'#FFF'}
             ios_backgroundColor="#3E3E3E"
-            onValueChange={toggleNotificationSwitch}
+            onValueChange={toggleMindliNotifiSwitch}
             value={isNotificationEnabled}
           />
         </View>
