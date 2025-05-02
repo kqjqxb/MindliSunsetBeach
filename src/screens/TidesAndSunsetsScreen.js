@@ -8,13 +8,14 @@ import {
   Image,
   SafeAreaView,
   Switch,
+  StyleSheet,
 } from 'react-native';
 
 const fontSFProTextRegular = 'SFProText-Regular';
 
 const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificationEnabled, setNotificationEnabled, }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-
+  const styles = createMindliStyles(dimensions);
   const toggleNotificationSwitch = () => {
     const newValue = !isNotificationEnabled;
     setNotificationEnabled(newValue);
@@ -240,109 +241,34 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
         alignSelf: 'center',
         marginTop: dimensions.height * 0.01,
       }}>
-        <View style={{
-          alignItems: 'center',
-          height: dimensions.height * 0.057,
-          borderRadius: dimensions.width * 0.016,
-          width: dimensions.height * 0.057,
-          justifyContent: 'center',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          alignSelf: 'flex-start',
-        }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: dimensions.height * 0.023,
-              fontWeight: 400,
-              fontFamily: fontSFProTextRegular,
-            }}>
+        <View style={styles.tideTimeBox}>
+          <Text style={styles.tideTimeText}>
             04
           </Text>
         </View>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: dimensions.height * 0.035,
-            paddingHorizontal: dimensions.width * 0.007,
-            fontWeight: 700,
-            color: '#595959',
-            fontFamily: fontSFProTextRegular,
-          }}>
+        <Text style={styles.toDotsStyles}>
           :
         </Text>
 
-        <View style={{
-          alignItems: 'center',
-          width: dimensions.height * 0.057,
-          height: dimensions.height * 0.057,
-          borderRadius: dimensions.width * 0.016,
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        }}>
-          <Text
-            style={{
-              fontFamily: fontSFProTextRegular,
-              color: 'white',
-              fontSize: dimensions.height * 0.023,
-              textAlign: 'center',
-              fontWeight: 400,
-            }}>
+        <View style={styles.tideTimeBox}>
+          <Text style={styles.tideTimeText}>
             00
           </Text>
         </View>
 
-        <View style={{
+        <View style={[styles.tideTimeBox, {
           marginLeft: dimensions.width * 0.1,
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: dimensions.width * 0.016,
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: dimensions.height * 0.057,
-          width: dimensions.height * 0.057,
-          alignSelf: 'flex-start',
-        }}>
-          <Text
-            style={{
-              fontFamily: fontSFProTextRegular,
-              color: 'white',
-              fontSize: dimensions.height * 0.023,
-              textAlign: 'center',
-              fontWeight: 400,
-            }}>
+        }]}>
+          <Text style={styles.tideTimeText}>
             16
           </Text>
         </View>
-        <Text
-          style={{
-            fontFamily: fontSFProTextRegular,
-            color: '#595959',
-            fontSize: dimensions.height * 0.035,
-            paddingHorizontal: dimensions.width * 0.007,
-            textAlign: 'center',
-            fontWeight: 700,
-          }}>
+        <Text style={styles.toDotsStyles}>
           :
         </Text>
 
-        <View style={{
-          width: dimensions.height * 0.057,
-          justifyContent: 'center',
-          height: dimensions.height * 0.057,
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          alignItems: 'center',
-          borderRadius: dimensions.width * 0.016,
-          alignSelf: 'flex-start',
-        }}>
-          <Text
-            style={{
-              fontWeight: 400,
-              fontFamily: fontSFProTextRegular,
-              color: 'white',
-              fontSize: dimensions.height * 0.023,
-              textAlign: 'center',
-            }}>
+        <View style={styles.tideTimeBox}>
+          <Text style={styles.tideTimeText}>
             00
           </Text>
         </View>
@@ -372,75 +298,22 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
         marginTop: dimensions.height * 0.016,
       }}>
         <View>
-          <Text
-            style={{
-              fontFamily: fontSFProTextRegular,
-              fontWeight: 400,
-              color: 'white',
-              textAlign: 'left',
-              alignSelf: 'flex-start',
-              maxWidth: dimensions.width * 0.75,
-              fontSize: dimensions.width * 0.043,
-            }}>
+          <Text style={styles.sunriseSunsetText}>
             Sunrise
           </Text>
 
-          <View style={{
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            alignSelf: 'center',
-            marginTop: dimensions.height * 0.01,
-            flexDirection: 'row',
-          }}>
-            <View style={{
-              justifyContent: 'center',
-              height: dimensions.height * 0.057,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: dimensions.width * 0.016,
-              alignItems: 'center',
-              width: dimensions.height * 0.057,
-              alignSelf: 'flex-start',
-            }}>
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.height * 0.023,
-                  textAlign: 'center',
-                  fontWeight: 400,
-                }}>
+          <View style={styles.timeBoxRowStyle}>
+            <View style={styles.tideTimeBox}>
+              <Text style={styles.tideTimeText}>
                 06
               </Text>
             </View>
-            <Text
-              style={{
-                paddingHorizontal: dimensions.width * 0.007,
-                color: '#595959',
-                fontSize: dimensions.height * 0.035,
-                textAlign: 'center',
-                fontFamily: fontSFProTextRegular,
-                fontWeight: 700,
-              }}>
+            <Text style={styles.toDotsStyles}>
               :
             </Text>
 
-            <View style={{
-              alignItems: 'center',
-              width: dimensions.height * 0.057,
-              height: dimensions.height * 0.057,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: dimensions.width * 0.016,
-              justifyContent: 'center',
-              alignSelf: 'flex-start',
-            }}>
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.height * 0.023,
-                  textAlign: 'center',
-                  fontWeight: 400,
-                }}>
+            <View style={styles.tideTimeBox}>
+              <Text style={styles.tideTimeText}>
                 30
               </Text>
             </View>
@@ -448,76 +321,23 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
         </View>
 
         <View>
-          <Text
-            style={{
-              maxWidth: dimensions.width * 0.75,
-              fontFamily: fontSFProTextRegular,
-              fontSize: dimensions.width * 0.043,
-              textAlign: 'left',
-              fontWeight: 400,
-              alignSelf: 'flex-start',
-              color: 'white',
-            }}>
+          <Text style={styles.sunriseSunsetText}>
             Sunset
           </Text>
 
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            alignSelf: 'center',
-            marginTop: dimensions.height * 0.01,
-          }}>
-            <View style={{
-              alignItems: 'center',
-              width: dimensions.height * 0.057,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: dimensions.width * 0.016,
-              justifyContent: 'center',
-              alignSelf: 'flex-start',
-              height: dimensions.height * 0.057,
-            }}>
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.height * 0.023,
-                  textAlign: 'center',
-                  fontWeight: 400,
-                }}>
-                06
+          <View style={styles.timeBoxRowStyle}>
+            <View style={styles.tideTimeBox}>
+              <Text style={styles.tideTimeText}>
+                19
               </Text>
             </View>
-            <Text
-              style={{
-                paddingHorizontal: dimensions.width * 0.007,
-                fontFamily: fontSFProTextRegular,
-                color: '#595959',
-                fontSize: dimensions.height * 0.035,
-                textAlign: 'center',
-                fontWeight: 700,
-              }}>
+            <Text style={styles.toDotsStyles}>
               :
             </Text>
 
-            <View style={{
-              width: dimensions.height * 0.057,
-              height: dimensions.height * 0.057,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: dimensions.width * 0.016,
-              justifyContent: 'center',
-              alignItems: 'center',
-              alignSelf: 'flex-start',
-            }}>
-              <Text
-                style={{
-                  fontFamily: fontSFProTextRegular,
-                  color: 'white',
-                  fontSize: dimensions.height * 0.023,
-                  textAlign: 'center',
-                  fontWeight: 400,
-                }}>
-                30
+            <View style={styles.tideTimeBox}>
+              <Text style={styles.tideTimeText}>
+                15
               </Text>
             </View>
           </View>
@@ -602,5 +422,48 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
     </SafeAreaView >
   );
 };
+
+const createMindliStyles = (dimensions) => StyleSheet.create({
+  tideTimeBox: {
+    alignItems: 'center',
+    width: dimensions.height * 0.057,
+    height: dimensions.height * 0.057,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: dimensions.width * 0.016,
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+  },
+  tideTimeText: {
+    fontFamily: fontSFProTextRegular,
+    color: 'white',
+    fontSize: dimensions.height * 0.023,
+    textAlign: 'center',
+    fontWeight: 400,
+  },
+  toDotsStyles: {
+    paddingHorizontal: dimensions.width * 0.007,
+    fontFamily: fontSFProTextRegular,
+    color: '#595959',
+    fontSize: dimensions.height * 0.035,
+    textAlign: 'center',
+    fontWeight: 700,
+  },
+  sunriseSunsetText: {
+    fontFamily: fontSFProTextRegular,
+    fontWeight: 400,
+    color: 'white',
+    textAlign: 'left',
+    alignSelf: 'flex-start',
+    maxWidth: dimensions.width * 0.75,
+    fontSize: dimensions.width * 0.043,
+  },
+  timeBoxRowStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    marginTop: dimensions.height * 0.01,
+  }
+});
 
 export default TidesAndSunsetsScreen;
