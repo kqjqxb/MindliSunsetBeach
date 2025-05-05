@@ -17,7 +17,6 @@ const TidesAndSunsetsScreen = ({ setSelectedMindliSunsetBeachScreen, isNotificat
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const styles = createMindliStyles(dimensions);
   const toggleMindliNotifiSwitch = () => {
-    setNewValue();
     const newValue = !isNotificationEnabled;
     setNotificationEnabled(newValue);
     saveMindliNotificationsSettings('isNotificationEnabled', newValue);
